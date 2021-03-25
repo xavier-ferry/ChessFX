@@ -1,7 +1,12 @@
-.grid-cell {
-    -fx-background-color: blue ;
-    -fx-padding: 10 ;
+.cell {
+    -fx-border-style: solid inside;
+    -fx-border-width: 2;
 }
-.grid-cell-vide{
-    -fx-background-color: red;
+
+.cell-noir{
+    -fx-background-color: green ;
+
+}
+
+.cell-blanche{
 }
