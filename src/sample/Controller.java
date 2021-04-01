@@ -13,24 +13,27 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.Stack;
+
 public class Controller {
     @FXML
     private GridPane gridPane ;
     private Partie maPartie;
 
     @FXML
-    private TextArea coupAJouer;
+    private TextArea dep;
+    @FXML
+    private TextArea dest;
 
     public void initialize() {
         this.maPartie = new Partie();
         createPlateuDeJeu();
 
     }
-    // MERCI : https://stackoverflow.com/questions/37619867/how-to-display-gridpane-object-grid-lines-permanently-and-without-using-the-set/40408598
-    private StackPane createCell(String nomCase) {
 
-        StackPane cell = new StackPane();
+    private void updateCell(StackPane cell,String nomCase){
 
+        //System.out.println("Avant - " + nomCase + " - "+ cell.getChildren());
         if (maPartie.getPlateau().getPiecebyNomCase(nomCase) != null ) {
             String nomFile = maPartie.getPlateau().getPiecebyNomCase(nomCase).toString();
             Image img = new Image("file:///Users/xavierwork/IdeaProjects/ChessFX/img/" + nomFile + ".png");
@@ -39,8 +42,20 @@ public class Controller {
             view.setFitHeight(50);
             view.setPreserveRatio(true);
             cell.getChildren().add(view);
+          //  System.out.println("Après - " + nomCase + " - "+cell.getChildren());
+        } else {
+            cell.getChildren().clear();
+            //System.out.println("Else - " + nomCase + " - "+cell.getChildren());
         }
         cell.getStyleClass().add("cell");
+
+    }
+    // MERCI : https://stackoverflow.com/questions/37619867/how-to-display-gridpane-object-grid-lines-permanently-and-without-using-the-set/40408598
+    private StackPane createCell(String nomCase) {
+
+        StackPane cell = new StackPane();
+        updateCell(cell,nomCase);
+
         return cell;
     }
 
@@ -75,25 +90,27 @@ public class Controller {
         gridPane.getStyleClass().add("grid");
     }
 
-    public void updateGridPanel(String caseDepart, String caseDestination){
-  /*      Node depart = null ;
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == 2 && GridPane.getRowIndex(node) == 2) {
-                depart = node;
-            }
-            if (GridPane.getColumnIndex(node) == 5 && GridPane.getRowIndex(node) == 5) {
-                gridPane.getChildren().set(5*8+5,depart);
-            }
-            System.out.println(node.toString());
-        }
-        gridPane.getChildren().remove(2,2);*/
-        gridPane.getChildren().set(10,createCell("e4"));
-            //do something
+    private int getIndexByNomCase(String nomCase){
+        int a = ((int) nomCase.charAt(0) - (int) 'a')*8;
+        int b =  Character.getNumericValue(nomCase.charAt(1))-1;
+        return a+b;
     }
-    public void printHelloWorld(){
-        System.out.println(coupAJouer.getText());
-        maPartie.getPlateau().deplacerPiece("e2","e4");
-        updateGridPanel("e2","e4");
+
+    public void updateGridPanel(String caseDepart, String caseDestination){
+        int indiceDepart = getIndexByNomCase(caseDepart);
+        updateCell((StackPane) gridPane.getChildren().get(indiceDepart),caseDepart);
+        int indiceArrivee = getIndexByNomCase(caseDestination);
+        updateCell((StackPane) gridPane.getChildren().get(indiceArrivee),caseDestination);
+    }
+    public void testerCoup(){
+        String depart = dep.getText();
+        String destination = dest.getText();
+        System.out.println(depart + " -> " + destination);
+        maPartie.getPlateau().deplacerPiece(depart,destination);
+        updateGridPanel(depart,destination);
+
+        dep.setText("");
+        dest.setText("");
     }
 
 }
