@@ -96,4 +96,19 @@ public class CaseUtils {
             return null;
         }
     }
+
+    public static String caseVoisin(String nomCase, String direction){
+        switch (direction){
+            case "HautGauche"   : return caseHautGauche(nomCase);
+            case "Haut"         : return caseHaut(nomCase);
+            case "HautDroite"   : return caseHautDroite(nomCase);
+            case "Droite"       : return caseDroite(nomCase);
+            case "BasDroite"    : return caseBasDroite(nomCase);
+            case "Bas"          : return caseBas(nomCase);
+            case "BasGauche"    : return caseBasGauche(nomCase);
+            case "Gauche"       : return caseGauche(nomCase);
+            default : return "";
+        }
+    }
+
 }

@@ -9,6 +9,8 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 
+import static Deplacements.PlateauUtils.*;
+
 public class Controller {
     @FXML
     private GridPane gridPane ;
@@ -34,8 +36,8 @@ public class Controller {
     private void updateCell(StackPane cell,String nomCase){
 
         //System.out.println("Avant - " + nomCase + " - "+ cell.getChildren());
-        if (maPartie.getPlateau().getPiecebyNomCase(nomCase) != null ) {
-            String nomFile = maPartie.getPlateau().getPiecebyNomCase(nomCase).toString();
+        if (getPiecebyNomCase(nomCase,maPartie.getPlateau().getEchiquier()) != null ) {
+            String nomFile = getPiecebyNomCase(nomCase,maPartie.getPlateau().getEchiquier()).toString();
             Image img = new Image("file:///Users/xavierwork/IdeaProjects/ChessFX/img/" + nomFile + ".png");
 
             ImageView view = new ImageView(img);
@@ -107,7 +109,7 @@ public class Controller {
         String depart = dep.getText();
         String destination = dest.getText();
         System.out.println(depart + " -> " + destination);
-        maPartie.getPlateau().deplacerPiece(depart,destination);
+        deplacerPiece(depart,destination,maPartie.getPlateau().getEchiquier());
         updateGridPanel(depart,destination);
 
         dep.setText("");
@@ -116,7 +118,7 @@ public class Controller {
     }
 
     public void debugOnClick() {
-        ArrayList<String> res = maPartie.getPlateau().getDeplacementsAutorises(txtTest.getText(),maPartie.getPlateau().getEchiquier());
+        ArrayList<String> res = getDeplacementsAutorises(txtTest.getText(),maPartie.getPlateau().getEchiquier());
         String txt = String.join(", ",res);
         txtDebug.setText(txt);
         for ( String s : res){
