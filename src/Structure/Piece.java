@@ -1,6 +1,9 @@
 package Structure;
 
 import java.util.ArrayList;
+import java.util.Map;
+
+import static Deplacements.CaseUtils.caseBas;
 
 public class Piece {
     public enum NomMateriel {PION,TOUR,CAVALIER,FOU,DAME,ROI}
@@ -110,6 +113,7 @@ public class Piece {
             return null;
         }
     }
+    /*
     private static String caseBas(String nomCase){
         char lettre = nomCase.charAt(0);
         int ligne = Character.getNumericValue(nomCase.charAt(1));
@@ -121,6 +125,7 @@ public class Piece {
             return null;
         }
     }
+    */
 
     private static String caseVoisin(String nomCase, String direction){
         switch (direction){
@@ -150,27 +155,18 @@ public class Piece {
 
     public static ArrayList<String> getDeplacementsPion(String nomCase, Piece pion, Plateau board){
         ArrayList<String> res = new ArrayList<>();
-        int ligne = Character.getNumericValue(nomCase.charAt(1));
         String nouvelleCase;
         if (pion.getCouleurPiece() == Couleur.BLANC){
-            System.out.println("PION BLANC en "+nomCase);
-            if ( ligne == 2){ // Si le pion est sur la deuxieme rangee
-                nouvelleCase = caseVoisin(nomCase,"Haut");
-                if (bouger(nouvelleCase,board)){
-                    res.add(nouvelleCase);
-
+            nouvelleCase = caseVoisin(nomCase,"Haut");
+            if (bouger(nouvelleCase,board)){
+                res.add(nouvelleCase);
+                if(nouvelleCase.charAt(1)=='3'){
                     nouvelleCase = caseVoisin(nouvelleCase,"Haut");
-                    if (bouger(nouvelleCase,board)){
+                    if (bouger(nouvelleCase,board)) {
                         res.add(nouvelleCase);
                     }
                 }
-            } else { // Si le pion n'est pas sur la deuxieme rangee
-                nouvelleCase = caseVoisin(nomCase,"Haut");
-                if (bouger(nouvelleCase,board)){
-                    res.add(nouvelleCase);
-                }
             }
-
             nouvelleCase = caseVoisin(nomCase,"HautGauche");
             if (manger(nouvelleCase,board,pion.couleurPiece)){
                 res.add(nouvelleCase);
@@ -184,22 +180,18 @@ public class Piece {
 
         } else {
             // pion de Couleur.NOIR
-            System.out.println("PION NOIR en "+nomCase);
-            if ( ligne == 7){ // Si le pion est sur la deuxieme rangee
-                nouvelleCase = caseVoisin(nomCase,"Bas");
-                if (bouger(nouvelleCase,board)){
-                    res.add(nouvelleCase);
-                    nouvelleCase = caseVoisin(nomCase,"Bas");
-                    if (bouger(nouvelleCase,board)){
+            // Si le pion n'est pas sur la deuxieme rangee
+            nouvelleCase = caseVoisin(nomCase,"Bas");
+            if (bouger(nouvelleCase,board)){
+                res.add(nouvelleCase);
+                if(nouvelleCase.charAt(1)=='6') {
+                    nouvelleCase = caseVoisin(nouvelleCase, "Bas");
+                    if (bouger(nouvelleCase, board)) {
                         res.add(nouvelleCase);
                     }
                 }
-            } else { // Si le pion n'est pas sur la deuxieme rangee
-                nouvelleCase = caseVoisin(nomCase,"Bas");
-                if (bouger(nouvelleCase,board)){
-                    res.add(nouvelleCase);
-                }
             }
+
             nouvelleCase = caseVoisin(nomCase,"BasGauche");
             if ( manger(nouvelleCase,board,pion.couleurPiece)){
                 res.add(nouvelleCase);
@@ -209,12 +201,12 @@ public class Piece {
                 res.add(nouvelleCase);
             }
         }
+        System.out.println("PION en "+nomCase+ " peut se deplacer -> "+res);
         return res;
     }
 
-    public static ArrayList<String> getDeplacementsGenerique(String nomCase, Piece maPiece, Plateau board, ArrayList<String> directionDeplacements){
+    public static ArrayList<String> getDeplacementsGenerique(String nomCase, Piece maPiece, Map<String,Piece> board, ArrayList<String> directionDeplacements){
         ArrayList<String> res = new ArrayList<>();
-        System.out.println(maPiece.getNomMateriel()+" "+maPiece.getCouleurPiece()+" en "+nomCase);
         String nouvelleCase = nomCase;
         int i = 0;
         while (i < directionDeplacements.size()){
@@ -230,6 +222,8 @@ public class Piece {
                 nouvelleCase = nomCase;
             }
         }
+
+        System.out.println(maPiece.getNomMateriel()+" "+maPiece.getCouleurPiece()+" en "+nomCase+ " peut se déplacer ici -> "+res);
         return res;
     }
 

@@ -12,27 +12,27 @@
 <HBox fx:controller="sample.Controller" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane
-                alignment="center" hgap="10" vgap="10"
+                alignment="center" hgap="1" vgap="1"
                 fx:id = "gridPane">
             <columnConstraints>
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
-                <ColumnConstraints minWidth="60.0" />
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
+                <ColumnConstraints minWidth="60.0" maxWidth="60.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
-                <RowConstraints minHeight="60.0" />
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
+                <RowConstraints minHeight="60.0" maxHeight="60.0"/>
             </rowConstraints>
         </GridPane>
         <VBox prefHeight="200.0" prefWidth="300.0" spacing="5.0">

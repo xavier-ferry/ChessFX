@@ -63,14 +63,14 @@ public class Controller {
         for (int x = 0 ; x < 8 ; x++) {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setFillWidth(true);
-            cc.setHgrow(Priority.ALWAYS);
+            //cc.setHgrow(Priority.ALWAYS);
             gridPane.getColumnConstraints().add(cc);
         }
 
         for (int y = 0 ; y < 8 ; y++) {
             RowConstraints rc = new RowConstraints();
             rc.setFillHeight(true);
-            rc.setVgrow(Priority.ALWAYS);
+            //rc.setVgrow(Priority.ALWAYS);
             gridPane.getRowConstraints().add(rc);
         }
 
@@ -116,11 +116,13 @@ public class Controller {
     }
 
     public void debugOnClick() {
-        ArrayList<String> res = maPartie.getPlateau().getDeplacementsAutorises(txtTest.getText());
+        ArrayList<String> res = maPartie.getPlateau().getDeplacementsAutorises(txtTest.getText(),maPartie.getPlateau().getEchiquier());
         String txt = String.join(", ",res);
         txtDebug.setText(txt);
         for ( String s : res){
             System.out.println("On aimerait rendre la case "+s+" grise");
         }
+
+
     }
 }
