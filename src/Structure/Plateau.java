@@ -1,5 +1,6 @@
 package Structure;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class Plateau {
         echiquier.put("a1",new Piece(Piece.NomMateriel.TOUR,Couleur.BLANC));
         echiquier.put("b1",new Piece(Piece.NomMateriel.CAVALIER,Couleur.BLANC));
         echiquier.put("c1",new Piece(Piece.NomMateriel.FOU,Couleur.BLANC));
-        echiquier.put("d1",new Piece(Piece.NomMateriel.ROI,Couleur.BLANC));
-        echiquier.put("e1",new Piece(Piece.NomMateriel.DAME,Couleur.BLANC));
+        echiquier.put("d1",new Piece(Piece.NomMateriel.DAME,Couleur.BLANC));
+        echiquier.put("e1",new Piece(Piece.NomMateriel.ROI,Couleur.BLANC));
         echiquier.put("f1",new Piece(Piece.NomMateriel.FOU,Couleur.BLANC));
         echiquier.put("g1",new Piece(Piece.NomMateriel.CAVALIER,Couleur.BLANC));
         echiquier.put("h1",new Piece(Piece.NomMateriel.TOUR,Couleur.BLANC));
@@ -29,8 +30,8 @@ public class Plateau {
         echiquier.put("a8",new Piece(Piece.NomMateriel.TOUR,Couleur.NOIR));
         echiquier.put("b8",new Piece(Piece.NomMateriel.CAVALIER,Couleur.NOIR));
         echiquier.put("c8",new Piece(Piece.NomMateriel.FOU,Couleur.NOIR));
-        echiquier.put("d8",new Piece(Piece.NomMateriel.ROI,Couleur.NOIR));
-        echiquier.put("e8",new Piece(Piece.NomMateriel.DAME,Couleur.NOIR));
+        echiquier.put("d8",new Piece(Piece.NomMateriel.DAME,Couleur.NOIR));
+        echiquier.put("e8",new Piece(Piece.NomMateriel.ROI,Couleur.NOIR));
         echiquier.put("f8",new Piece(Piece.NomMateriel.FOU,Couleur.NOIR));
         echiquier.put("g8",new Piece(Piece.NomMateriel.CAVALIER,Couleur.NOIR));
         echiquier.put("h8",new Piece(Piece.NomMateriel.TOUR,Couleur.NOIR));
@@ -68,4 +69,22 @@ public class Plateau {
         echiquier.remove(caseDepart);
     }
 
+    public ArrayList<String> getDeplacementsAutorises(String nomCase){
+        ArrayList<String> res = new ArrayList<String>();
+        Piece maPiece = getPiecebyNomCase(nomCase);
+        if (maPiece != null) {
+            switch (maPiece.getNomMateriel()){
+                case "PION" : res = Piece.getDeplacementsPion(nomCase, maPiece, this); break;
+                case "TOUR" : res = Piece.getDeplacementsTour(nomCase, maPiece, this); break;
+                case "FOU"  : res = Piece.getDeplacementsFou(nomCase, maPiece, this); break;
+                case "DAME" : res = Piece.getDeplacementsDame(nomCase, maPiece, this); break;
+                case "ROI"  : res = Piece.getDeplacementsRoi(nomCase, maPiece, this); break;
+                case "CAVALIER" : res = Piece.getDeplacementsCavalier(nomCase, maPiece, this); break;
+            }
+        }else {
+            res.add("emptyCase");
+        }
+
+        return res;
+    }
 }

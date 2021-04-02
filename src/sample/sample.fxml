@@ -45,6 +45,13 @@
                 <Button mnemonicParsing="false" text="Valider Coup" onAction="#testerCoup"/>
                 <Label text="Coups de la partie : ">
                 </Label>
+
+                <Label text="TXT DEBUG :" />
+                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "txtTest"/>
+
+                <Button mnemonicParsing="false" text="Boutton DEBUG" onAction="#debugOnClick"/>
+
+                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "txtDebug"/>
             </children>
         </VBox>
     </children>

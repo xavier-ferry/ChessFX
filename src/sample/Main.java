@@ -14,12 +14,12 @@ public class Main extends Application {
         root.getStylesheets().add(getClass().getResource("grid.css").toExternalForm());
 
         primaryStage.setTitle("ChessFX");
-        primaryStage.setScene(new Scene(root, 800, 800));
+        primaryStage.setScene(new Scene(root, 1000, 800));
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
+
         launch(args);
     }
 }

@@ -1,19 +1,13 @@
 package sample;
 
 import Structure.Partie;
-import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
-import java.util.Stack;
+import java.util.ArrayList;
 
 public class Controller {
     @FXML
@@ -24,6 +18,12 @@ public class Controller {
     private TextArea dep;
     @FXML
     private TextArea dest;
+
+    @FXML
+    private TextArea txtTest;
+
+    @FXML
+    private TextArea txtDebug;
 
     public void initialize() {
         this.maPartie = new Partie();
@@ -83,6 +83,7 @@ public class Controller {
                 } else {
                     newCell.getStyleClass().add("cell-blanche");
                 }
+                newCell.getStyleClass().add("cell-"+s);
                 gridPane.add(newCell, x, 8-y);
             }
         }
@@ -111,6 +112,15 @@ public class Controller {
 
         dep.setText("");
         dest.setText("");
+
     }
 
+    public void debugOnClick() {
+        ArrayList<String> res = maPartie.getPlateau().getDeplacementsAutorises(txtTest.getText());
+        String txt = String.join(", ",res);
+        txtDebug.setText(txt);
+        for ( String s : res){
+            System.out.println("On aimerait rendre la case "+s+" grise");
+        }
+    }
 }

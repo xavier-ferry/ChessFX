@@ -4,9 +4,11 @@
 }
 
 .cell-noir{
-    -fx-background-color: green ;
+    -fx-background-color: DARKGREEN ;
 
 }
 
 .cell-blanche{
+    -fx-background-color: ANTIQUEWHITE ;
+
 }
