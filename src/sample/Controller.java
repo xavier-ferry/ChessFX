@@ -1,5 +1,6 @@
 package sample;
 
+import Structure.Couleur;
 import Structure.Partie;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -118,12 +119,23 @@ public class Controller {
     }
 
     public void debugOnClick() {
-        ArrayList<String> res = getDeplacementsAutorises(txtTest.getText(),maPartie.getPlateau().getEchiquier());
-        String txt = String.join(", ",res);
-        txtDebug.setText(txt);
-        for ( String s : res){
-            System.out.println("On aimerait rendre la case "+s+" grise");
+
+        String tmp = stringToDepartDestination(maPartie.getPlateau().getEchiquier(),txtTest.getText(), Couleur.BLANC);
+        if (tmp != "ERROR" ){
+            String [] cases = tmp.split(",");
+            String depart =cases[0];
+            String destination = cases[1];
+
+            System.out.println(depart + " -> " + destination);
+            deplacerPiece(depart,destination,maPartie.getPlateau().getEchiquier());
+            updateGridPanel(depart,destination);
+
+            String txt = String.join(", ",cases);
+            txtDebug.setText(txt);
+        } else {
+            txtDebug.setText("ERROR deplacement");
         }
+
 
 
     }

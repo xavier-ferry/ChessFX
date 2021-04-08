@@ -96,4 +96,86 @@ public class PlateauUtils {
             System.out.println("Déplacement Illégal !");
         }
     }
+
+    public static ArrayList<String> piecesConcernees(Map<String,Piece> board, String nomPiece, Couleur couleurJoueur, String caseDestination){
+        ArrayList<String> res = new ArrayList<>();
+
+        for (Entry<String,Piece> entry : board.entrySet()){
+            Piece pieceActuelle =  entry.getValue();
+            if ( pieceActuelle.getCouleurPiece() == couleurJoueur && pieceActuelle.getNomMateriel().equals(nomPiece)){
+                if (getDeplacementsAutorises(entry.getKey(),board).contains(caseDestination)){
+                    res.add(entry.getKey());
+                }
+            }
+        }
+        return res;
+    }
+
+    public static String stringToDepartDestination(Map<String, Piece> board, String deplacement, Couleur couleurJoueur){
+        String laPiece = "";
+        String caseDestination = "";
+        char precision = ' ';
+
+        char lettre = deplacement.charAt(0);
+        switch (lettre){
+            case 'Q' : laPiece = "DAME" ; break;
+            case 'K' : laPiece = "ROI" ;  break;
+            case 'B' : laPiece = "FOU" ;  break;
+            case 'N' : laPiece = "CAVALIER" ;  break;
+            case 'R' : laPiece = "TOUR" ;  break;
+            case 'a': case 'b' : case 'c' : case 'd' :
+                case 'e' : case 'f' : case 'g' : case 'h':
+                laPiece = "PION" ; break;
+            default : return "ERROR";
+        }
+
+        switch (laPiece){
+            case "PION" : //e4 ; exf ; exf4 ;
+                switch (deplacement.length()){
+                    case 2 : caseDestination = deplacement; break;
+                    case 3 : System.out.println("Il faut preciser le numero qu'on mange"); break;
+                    case 4 :
+                        precision = deplacement.charAt(0);
+                        caseDestination = ""+deplacement.charAt(2) + deplacement.charAt(3); break;
+                }
+                break;
+            default : //  Qc4 ; Qxc4 ; Rab8 ; R8a7 ; Raxc8 ; R8xc4 ; Qa8c6 ; Qa8xc6
+                switch (deplacement.length()){
+                    case 3 : caseDestination = ""+deplacement.charAt(1) + deplacement.charAt(2); break;
+                    case 4 :
+                        if (deplacement.charAt(1) == 'x') caseDestination = ""+deplacement.charAt(2) + deplacement.charAt(3);
+                        else {
+                            precision = deplacement.charAt(1);
+                            caseDestination = ""+deplacement.charAt(2) + deplacement.charAt(3);
+                        }
+                        break;
+                    case 5 :
+                        if (deplacement.contains("x")) {
+                            precision = deplacement.charAt(1);
+                            caseDestination = "" + deplacement.charAt(3) + deplacement.charAt(4);
+                        } else
+                            return ""+deplacement.charAt(1) + deplacement.charAt(2)+","+deplacement.charAt(3) + deplacement.charAt(4);
+                        break;
+                    case 6 :
+                        return ""+deplacement.charAt(1) + deplacement.charAt(2)+","+deplacement.charAt(4) + deplacement.charAt(5);
+                }
+        }
+
+
+        ArrayList<String> piecesDepart = piecesConcernees(board,laPiece,couleurJoueur,caseDestination);
+        if (piecesDepart.size() == 1)
+            return piecesDepart.get(0)+','+caseDestination;
+        else if (piecesDepart.size() > 1){
+            ArrayList<String> resDepart = new ArrayList<>();
+            for (String s : piecesDepart)
+                if (s.contains(""+precision))
+                    resDepart.add(s);
+
+            if (resDepart.size() == 1)
+                return resDepart.get(0)+','+caseDestination;
+            else
+                return "ERROR";
+        }
+        return "ERROR";
+    }
 }
