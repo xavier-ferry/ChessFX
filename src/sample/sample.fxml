@@ -37,13 +37,11 @@
         </GridPane>
         <VBox prefHeight="200.0" prefWidth="300.0" spacing="5.0">
             <children>
-                <Label text="Case Départ :" />
+                <Label text="Déplacement à effectuer :" />
                 <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "dep"/>
-                <Label text="Case Destination :" />
-                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "dest"/>
 
                 <Button mnemonicParsing="false" text="Valider Coup" onAction="#testerCoup"/>
-                <Label text="Coups de la partie : ">
+                <Label text="Coups de la partie : " fx:id="coupsPartie">
                 </Label>
 
                 <Label text="TXT DEBUG :" />

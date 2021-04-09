@@ -3,27 +3,27 @@ package sample;
 import Structure.Couleur;
 import Structure.Partie;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-
-import java.util.ArrayList;
 
 import static Deplacements.PlateauUtils.*;
 
 public class Controller {
-    @FXML
-    private GridPane gridPane ;
     private Partie maPartie;
 
     @FXML
-    private TextArea dep;
-    @FXML
-    private TextArea dest;
+    private GridPane gridPane ;
 
     @FXML
-    private TextArea txtTest;
+    private TextArea dep;
+
+    @FXML
+    private Label coupsPartie;
 
     @FXML
     private TextArea txtDebug;
@@ -31,6 +31,23 @@ public class Controller {
     public void initialize() {
         this.maPartie = new Partie();
         createPlateuDeJeu();
+
+        parametrerBoutons();
+    }
+
+    private void parametrerBoutons(){
+        dep.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().length() <= 6 ? change : null));
+        dep.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)  {
+                System.out.println("ENTRER");
+                dep.setText(dep.getText(0, dep.getLength()-1));
+                if (dep.getText().length()>=2) {
+                    testerCoup();
+                    dep.setText("");
+                }
+            }
+        });
 
     }
 
@@ -106,37 +123,36 @@ public class Controller {
         int indiceArrivee = getIndexByNomCase(caseDestination);
         updateCell((StackPane) gridPane.getChildren().get(indiceArrivee),caseDestination);
     }
-    public void testerCoup(){
-        String depart = dep.getText();
-        String destination = dest.getText();
-        System.out.println(depart + " -> " + destination);
-        deplacerPiece(depart,destination,maPartie.getPlateau().getEchiquier());
-        updateGridPanel(depart,destination);
 
-        dep.setText("");
-        dest.setText("");
-
+    private void updateCoupPartie(String deplacement){
+        coupsPartie.setText(coupsPartie.getText() + "  " +deplacement+"\n");
     }
 
-    public void debugOnClick() {
-
-        String tmp = stringToDepartDestination(maPartie.getPlateau().getEchiquier(),txtTest.getText(), Couleur.BLANC);
+    public void testerCoup(){
+        String tmp = stringToDepartDestination(maPartie.getPlateau().getEchiquier(),dep.getText(), Couleur.BLANC);
         if (tmp != "ERROR" ){
             String [] cases = tmp.split(",");
             String depart =cases[0];
             String destination = cases[1];
 
             System.out.println(depart + " -> " + destination);
-            deplacerPiece(depart,destination,maPartie.getPlateau().getEchiquier());
+            String statutPartie = jouerCoup(maPartie.getPlateau().getEchiquier(),depart,destination);
             updateGridPanel(depart,destination);
 
             String txt = String.join(", ",cases);
             txtDebug.setText(txt);
+            updateCoupPartie(dep.getText()+statutPartie);
         } else {
             txtDebug.setText("ERROR deplacement");
         }
+        // Problème de isCheckMate :(
+        /*if (isCheckMate(maPartie.getPlateau().getEchiquier(),getCaseRoi(maPartie.getPlateau().getEchiquier(), Couleur.NOIR))){
+            txtDebug.setText("CHECKMATE");
+            System.out.println("ECHEC ET MAT !!!");
+        }*/
+    }
 
-
+    public void debugOnClick() {
 
     }
 }

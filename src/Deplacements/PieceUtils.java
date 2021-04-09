@@ -5,11 +5,11 @@ import Structure.Piece;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static Deplacements.CaseUtils.caseVoisin;
-import static Deplacements.PlateauUtils.bouger;
-import static Deplacements.PlateauUtils.manger;
+import static Deplacements.PlateauUtils.*;
 
 public class PieceUtils {
 
@@ -141,10 +141,26 @@ public class PieceUtils {
         int i = 0;
         while (i < directionDeplacements.size()){
             String nouvelleCase = caseVoisin(nomCase,directionDeplacements.get(i));
-            if (bouger(nouvelleCase,board) || manger(nouvelleCase,board,roi.getCouleurPiece()) ){
-                res.add(nouvelleCase);
+
+            /*if (bouger(nouvelleCase,board) || manger(nouvelleCase,board,roi.getCouleurPiece()))
+              // Tester si le roi se retrouve en echec
+                 res.add(nouvelleCase);
+
+            i++;*/
+
+            /* Problème avec cette version de la fonction :*/
+            if (bouger(nouvelleCase,board) || manger(nouvelleCase,board,roi.getCouleurPiece())){
+                // Tester si le roi se retrouve en echec !
+                Map<String,Piece> plateauTest = new HashMap<>(board);
+                plateauTest = testDeplacerPiece(plateauTest,nomCase,nouvelleCase);
+                if (! isCheck(plateauTest,nouvelleCase))
+                    res.add(nouvelleCase);
+                else
+                    System.out.println("Echec si je me déplace en "+nouvelleCase);
             }
             i++;
+
+
         }
         return res;
 

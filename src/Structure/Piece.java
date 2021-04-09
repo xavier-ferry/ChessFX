@@ -1,17 +1,14 @@
 package Structure;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 
 public class Piece {
     public enum NomMateriel {PION,TOUR,CAVALIER,FOU,DAME,ROI}
-    private final NomMateriel piece;
+    private final NomMateriel materiel;
     private final Couleur couleurPiece;
 
 
     public Piece(NomMateriel maPiece, Couleur maCouleur){
-        this.piece = maPiece;
+        this.materiel = maPiece;
         this.couleurPiece = maCouleur;
     }
 
@@ -19,14 +16,15 @@ public class Piece {
     public String toString() {
         String res = "";
         switch (couleurPiece){
-            case BLANC: res = piece+"BLANC";break;
-            case NOIR: res = piece+"NOIR";
+            case BLANC: res = materiel +"BLANC";break;
+            case NOIR: res = materiel +"NOIR";
         }
         return res;
     }
 
     public Couleur getCouleurPiece(){return couleurPiece;}
-    public String getNomMateriel(){return piece.toString();}
+    public NomMateriel getMateriel(){return materiel;}
+    public String getStringNomMateriel(){return materiel.toString();}
 
 }
 
