@@ -12,14 +12,33 @@ import static Deplacements.PieceUtils.*;
 import static java.util.Map.*;
 
 public class PlateauUtils {
+
+    /**
+     * @param nomCase
+     * @param board
+     * @return la piece qui se trouve à la case nomCase. null si la case est vide
+     */
     public static Piece getPiecebyNomCase(String nomCase, Map<String, Piece> board){
         return board.get(nomCase);
     }
 
+
+    /**
+     * @param nomCase la case où on tente de se déplacer
+     * @param board un plateau de jeu
+     * @return true si la case est libre, false sinon
+     */
     public static boolean bouger(String nomCase, Map<String,Piece>  board){
         return ( nomCase != null && getPiecebyNomCase(nomCase,board) == null);
     }
 
+
+    /**
+     * @param nomCase la case où on tente de manger
+     * @param board un plateau de jeu
+     * @param maCouleur la couleur du joueur qui tente de manger
+     * @return true si la case est occupé par une piece de l'adversaire. False sinon
+     */
     public static boolean manger(String nomCase, Map<String,Piece>  board, Couleur maCouleur){
         if ( nomCase != null){
             Piece laPiece =  getPiecebyNomCase(nomCase,board);
@@ -28,6 +47,11 @@ public class PlateauUtils {
         return false;
     }
 
+    /**
+     * @param nomCase
+     * @param board
+     * @return une ArrayList<String> contenant toutes les cases où peut se rendre la piece qui se trouve en nomCase
+     */
     public static ArrayList<String> getDeplacementsAutorises(String nomCase, Map<String,Piece> board){
         ArrayList<String> res = new ArrayList<>();
         Piece maPiece = getPiecebyNomCase(nomCase, board);
@@ -47,6 +71,11 @@ public class PlateauUtils {
         return res;
     }
 
+    /**
+     * @param plateauActuel
+     * @param maCouleur
+     * @return la case où se trouve le roi de couleur maCouleur
+     */
     public static String getCaseRoi(Map<String,Piece> plateauActuel, Couleur maCouleur){
         String res = "ERROR";
         for (Entry<String,Piece> entry : plateauActuel.entrySet()){
@@ -60,6 +89,11 @@ public class PlateauUtils {
     }
 
 
+    /**
+     * @param plateauActuel
+     * @param caseRoi
+     * @return un booléen correspondant au fait que le roi en caseRoi est echec et mat
+     */
     public static boolean isCheckMate(Map<String,Piece> plateauActuel, String caseRoi) {
         Couleur couleurRoi = getPiecebyNomCase(caseRoi,plateauActuel).getCouleurPiece();
         System.out.println("Déplacement autorisés roi noir " + getDeplacementsAutorises(caseRoi,plateauActuel));
@@ -85,6 +119,12 @@ public class PlateauUtils {
         return false;
     }
 
+
+    /**
+     * @param plateauActuel
+     * @param nomCase
+     * @return un booléen qui indique si la pièce se trouvant en nomCase risque de se faire manger.
+     */
     public static boolean estMenacee(Map<String,Piece> plateauActuel, String nomCase){
         Couleur couleurPiece = getPiecebyNomCase(nomCase,plateauActuel).getCouleurPiece();
 
@@ -123,10 +163,23 @@ public class PlateauUtils {
         return false;
     }
 
+    /**
+     * @param plateauActuel
+     * @param caseRoi
+     * @return true si le roi en caseRoi est menacé, false sinon
+     */
     public static boolean isCheck(Map<String,Piece> plateauActuel, String caseRoi){
         return estMenacee(plateauActuel,caseRoi);
     }
 
+    /**
+     * @param plateauActuel
+     * @param caseDepart
+     * @param caseDestination
+     * @return un plateau où un déplacement de la piece de caseDepart à caseDestination a été effectué sans vérification.
+     * UTILITE : permet de déplacer une piece puis de voir si c'était un déplacement légal,
+     * ou de voir si la situation du joueur est améliorée dans le cadre de l'IA
+     */
     public static Map<String, Piece> testDeplacerPiece(Map<String, Piece> plateauActuel,String caseDepart, String caseDestination) {
         System.out.println("--------\nDéplacement SansVerif : "+caseDepart + " -> "+caseDestination + " // "+plateauActuel);
         plateauActuel.put(caseDestination,plateauActuel.get(caseDepart));
@@ -134,6 +187,14 @@ public class PlateauUtils {
         return plateauActuel;
     }
 
+
+    /**
+     * @param plateauActuel
+     * @param caseDepart
+     * @param caseDestination
+     * @return un plateau si le déplacement de caseDepart à caseDestination n'a pas mis le roi de la couleur du joueur en échec.
+     * null sinon.
+     */
     private static Map<String, Piece> imaginePlateau(Map<String, Piece> plateauActuel, String caseDepart, String caseDestination){
         Couleur maCouleur = plateauActuel.get(caseDepart).getCouleurPiece();
         plateauActuel = testDeplacerPiece(new HashMap<>(plateauActuel),caseDepart,caseDestination);
@@ -144,6 +205,14 @@ public class PlateauUtils {
             return null;
     }
 
+    /**
+     * @param board
+     * @param caseDepart
+     * @param caseDestination
+     *
+     * si la piece en caseDepart peut se rendre en caseDestination et que ca ne met pas son propre roi en echec
+     * alors on déplace ladite piece.
+     */
     public static void deplacerPiece(Map<String,Piece> board,String caseDepart, String caseDestination ){
         if (getDeplacementsAutorises(caseDepart,board).contains(caseDestination) &&
                 imaginePlateau(new HashMap<>(board),caseDepart,caseDestination) != null ) {
@@ -157,43 +226,16 @@ public class PlateauUtils {
         }
     }
 
-    public static String statutPartie(Map<String,Piece> plateau, Couleur joueurQuiVientDeJouer){
-        Couleur couleurOpposee = joueurQuiVientDeJouer.getCouleurOpposee();
-        System.out.println("toto");
-        System.out.println(couleurOpposee);
-        String caseRoi = getCaseRoi(plateau,couleurOpposee);
-        if (isCheck(plateau,caseRoi)){
-            if (isCheckMate(plateau,caseRoi))
-                return "CHECKMATE -- "+joueurQuiVientDeJouer+" WIN !! ";
-            return "CHECK "+couleurOpposee;
-        }
-        return "ENCOURS";
 
 
-/*        String caseRoi = getCaseRoi(plateau,Couleur.NOIR);
-        if (isCheck(plateau,caseRoi)){
-            if (isCheckMate(plateau,caseRoi))
-                return "CHECKMATE -- "+joueurQuiVientDeJouer+" WIN !! ";
-            return "CHECK "+"NOIR";
-        }
-        return "ENCOURS";*/
-    }
-
-    public static String jouerCoup(Map<String,Piece> plateauActuel, String caseDepart, String caseDestination){
-        Couleur couleurJoueurActif =getPiecebyNomCase(caseDepart,plateauActuel).getCouleurPiece();
-        System.out.println("Avant "+caseDepart+" -> "+caseDestination+" => "+getPiecebyNomCase(caseDepart,plateauActuel));
-        deplacerPiece(plateauActuel,caseDepart,caseDestination);
-        System.out.println("Après => "+getPiecebyNomCase(caseDepart,plateauActuel));
-
-        return statutPartie(plateauActuel,couleurJoueurActif);
-
-        //Si echec
-        // Si echec et mat
-
-
-    }
-
-    public static ArrayList<String> piecesConcernees(Map<String,Piece> board, String nomPiece, Couleur couleurJoueur, String caseDestination){
+    /**
+     * @param board
+     * @param nomPiece
+     * @param couleurJoueur
+     * @param caseDestination
+     * @return une liste de caseDepart pouvant se rendre en caseDestination
+     */
+    private static ArrayList<String> piecesConcernees(Map<String,Piece> board, String nomPiece, Couleur couleurJoueur, String caseDestination){
         ArrayList<String> res = new ArrayList<>();
 
         for (Entry<String,Piece> entry : board.entrySet()){
@@ -207,6 +249,15 @@ public class PlateauUtils {
         return res;
     }
 
+
+    /**
+     * Transforme un deplacement notation echec en un string contenant caseDepart et caseDestination
+     *
+     * @param board
+     * @param deplacement e4 ; exf ; exf4 ;Qc4 ; Qxc4 ; Rab8 ; R8a7 ; Raxc8 ; R8xc4 ; Qa8c6 ; Qa8xc6
+     * @param couleurJoueur
+     * @return String: "caseDepart,caseDestination"
+     */
     public static String stringToDepartDestination(Map<String, Piece> board, String deplacement, Couleur couleurJoueur){
         String laPiece = "";
         String caseDestination = "";

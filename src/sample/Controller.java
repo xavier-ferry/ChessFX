@@ -9,9 +9,14 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 
-import static Deplacements.PlateauUtils.*;
+import static Deplacements.PartieUtils.jouerCoup;
+import static Deplacements.PlateauUtils.getPiecebyNomCase;
+import static Deplacements.PlateauUtils.stringToDepartDestination;
 
 public class Controller {
     private Partie maPartie;
@@ -32,10 +37,6 @@ public class Controller {
         this.maPartie = new Partie();
         createPlateuDeJeu();
 
-        parametrerBoutons();
-    }
-
-    private void parametrerBoutons(){
         dep.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().length() <= 6 ? change : null));
         dep.setOnKeyPressed(keyEvent -> {
@@ -48,8 +49,10 @@ public class Controller {
                 }
             }
         });
-
+        /*parametrerBoutons(dep);*/
     }
+
+
 
     private void updateCell(StackPane cell,String nomCase){
 
@@ -130,6 +133,7 @@ public class Controller {
 
     public void testerCoup(){
         String tmp = stringToDepartDestination(maPartie.getPlateau().getEchiquier(),dep.getText(), Couleur.BLANC);
+        System.out.println(tmp);
         if (tmp != "ERROR" ){
             String [] cases = tmp.split(",");
             String depart =cases[0];
