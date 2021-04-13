@@ -1,7 +1,9 @@
+/*
 package sample;
 
 public class ControllerUtils {
-    /*public void parametrerBoutons(TextArea dep){
+    */
+/*public void parametrerBoutons(TextArea dep){
         dep.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().length() <= 6 ? change : null));
         dep.setOnKeyPressed(keyEvent -> {
@@ -15,5 +17,7 @@ public class ControllerUtils {
             }
         });
 
-    }*/
+    }*//*
+
 }
+*/

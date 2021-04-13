@@ -1,24 +1,16 @@
-package Deplacements;
+package Models.Utils;
 
 
-import Structure.Couleur;
-import Structure.Piece;
+import Models.Couleur;
+import Models.Piece;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-import static Deplacements.PlateauUtils.*;
-import static Structure.Partie.*;
+import static Models.Utils.PlateauUtils.*;
 
 public class PartieUtils {
 
-    public static void ajouterCoupHistorique(String deplacement){
-        ArrayList <String> tmp = getHistoriqueCoup();
-        tmp.add(deplacement);
-        setHistoriqueCoup(tmp);
-    }
-
-    public static int ajouterPlateauHistorique(Map<String, Piece> plateauAajouter){
+    /*public static int ajouterPlateauHistorique(Map<String, Piece> plateauAajouter){
         Map<Map<String,Piece>, Integer> tmp = getHistoriquePlateau();
         Integer nb = tmp.get(plateauAajouter);
         if (nb.equals(null)) nb = 0;
@@ -26,7 +18,7 @@ public class PartieUtils {
         setHistoriquePlateau(tmp);
 
         return nb;
-    }
+    }*/
 
     public static String statutPartie(Map<String,Piece> plateau, Couleur joueurQuiVientDeJouer){
         Couleur couleurOpposee = joueurQuiVientDeJouer.getCouleurOpposee();

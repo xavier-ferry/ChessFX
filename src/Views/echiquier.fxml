@@ -1,16 +1,7 @@
-<!--
-<?import javafx.scene.layout.GridPane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.*?>
 
 
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
-<HBox fx:controller="sample.Controller" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:controller="Controllers.viewControllers.ControllerEchiquier" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane
                 alignment="center" hgap="1" vgap="1"
@@ -36,22 +27,5 @@
                 <RowConstraints minHeight="60.0" maxHeight="60.0"/>
             </rowConstraints>
         </GridPane>
-        <VBox prefHeight="200.0" prefWidth="300.0" spacing="5.0">
-            <children>
-                <Label text="Déplacement à effectuer :" />
-                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "dep"/>
-
-                <Button mnemonicParsing="false" text="Valider Coup" onAction="#testerCoup"/>
-                <Label text="Coups de la partie : " fx:id="coupsPartie">
-                </Label>
-
-                <Label text="TXT DEBUG :" />
-                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "txtTest"/>
-
-                <Button mnemonicParsing="false" text="Boutton DEBUG" onAction="#debugOnClick"/>
-
-                <TextArea prefHeight="33.0" prefWidth="100.0" fx:id = "txtDebug"/>
-            </children>
-        </VBox>
     </children>
-</HBox>-->
+</HBox>

@@ -1,14 +1,14 @@
-package Deplacements;
+package Models.Utils;
 
-import Structure.Couleur;
-import Structure.Piece;
+import Models.Couleur;
+import Models.Piece;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static Deplacements.CaseUtils.caseVoisin;
-import static Deplacements.PieceUtils.*;
+import static Models.Utils.CaseUtils.caseVoisin;
+import static Models.Utils.PieceUtils.*;
 import static java.util.Map.*;
 
 public class PlateauUtils {

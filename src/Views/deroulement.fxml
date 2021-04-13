@@ -1,0 +1,17 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.viewControllers.ControllerDeroulement"
+      xmlns="http://javafx.com/javafx/8">
+    <children>
+
+        <VBox prefHeight="200.0" prefWidth="300.0" spacing="5.0">
+            <children>
+                <Label text="Coups de la partie : " fx:id="coupsPartie">
+                </Label>
+            </children>
+        </VBox>
+    </children>
+</HBox>

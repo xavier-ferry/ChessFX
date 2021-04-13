@@ -1,4 +1,4 @@
-package Structure;
+package Models;
 
 public enum Couleur {NOIR,BLANC;
 

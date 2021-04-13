@@ -1,4 +1,4 @@
-package Deplacements;
+package Models.Utils;
 
 public class CaseUtils {
     private static String caseBas(String nomCase){
