@@ -32,6 +32,7 @@ public class PieceUtils {
         }
         return res;
     }
+
     public static ArrayList<String> getDeplacementsPion(String nomCase, Piece pion, Map<String,Piece> board ){
         ArrayList<String> res = new ArrayList<>();
         String nouvelleCase;

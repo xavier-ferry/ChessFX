@@ -5,7 +5,7 @@ import Models.Partie;
 import Models.Piece;
 
 public class PartieController {
-    Partie partie;
+    private Partie partie;
 
 
     public PartieController(){
