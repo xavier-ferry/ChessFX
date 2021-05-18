@@ -1,6 +1,6 @@
 package Controllers.viewControllers;
 
-import Models.Partie;
+import Models.Piece;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,17 +9,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
-import static Models.Utils.PlateauUtils.getPiecebyNomCase;
+import java.util.Map;
+
 
 public class ControllerEchiquier {
     @FXML
     public GridPane gridPane;
 
-
     public void initialize(){
         System.out.println("ControllerEchiquier - initialize");
     }
-
 
 
     private int getIndexByNomCase(String nomCase){
@@ -28,11 +27,13 @@ public class ControllerEchiquier {
         return a+b;
     }
 
-    private void updateCell(StackPane cell, String nomCase){
+    private void updateCell(StackPane cell, String nomCase,Map<String,Piece> board){
 
         //System.out.println("Avant - " + nomCase + " - "+ cell.getChildren());
-        if (getPiecebyNomCase(nomCase, Partie.plateau) != null ) {
-            String nomFile = getPiecebyNomCase(nomCase,Partie.plateau).toString();
+        if (board.get(nomCase) != null){
+        //if (getPiecebyNomCase(nomCase, Partie.plateau) != null ) {
+          //  String nomFile = getPiecebyNomCase(nomCase,Partie.plateau).toString();
+            String nomFile = board.get(nomCase).toString();
             Image img = new Image("file:///Users/xavierwork/IdeaProjects/ChessFX/img/" + nomFile + ".png");
 
             ImageView view = new ImageView(img);
@@ -48,15 +49,15 @@ public class ControllerEchiquier {
 
     }
     // MERCI : https://stackoverflow.com/questions/37619867/how-to-display-gridpane-object-grid-lines-permanently-and-without-using-the-set/40408598
-    private StackPane createCell(String nomCase) {
+    private StackPane createCell(String nomCase,Map<String,Piece> board) {
 
         StackPane cell = new StackPane();
-        updateCell(cell,nomCase);
+        updateCell(cell,nomCase,board);
 
         return cell;
     }
 
-    public void createPlateuDeJeu(){
+    public void createPlateuDeJeu(Map<String,Piece> board){
         for (int x = 0 ; x < 8 ; x++) {
             ColumnConstraints cc = new ColumnConstraints();
             cc.setFillWidth(true);
@@ -74,7 +75,7 @@ public class ControllerEchiquier {
         for (int x = 1 ; x <= 8 ; x++) {
             for (int y = 0 ; y < 8 ; y++) {
                 String s = (char)((int)'a' +x-1) + String.valueOf(y+1);
-                StackPane newCell =createCell(s);
+                StackPane newCell =createCell(s,board);
                 if ((y % 2 == 0 && x % 2 == 1) || (y%2 == 1 && x %2 == 0)){
                     newCell.getStyleClass().add("cell-noir");
                 } else {
@@ -90,10 +91,11 @@ public class ControllerEchiquier {
 
 
 
-    public void updateGridPanel(String caseDepart, String caseDestination){
+    public void updateGridPanel(String caseDepart, String caseDestination,Map<String,Piece> board){
         int indiceDepart = getIndexByNomCase(caseDepart);
-        updateCell((StackPane) gridPane.getChildren().get(indiceDepart),caseDepart);
+        updateCell((StackPane) gridPane.getChildren().get(indiceDepart),caseDepart,board);
         int indiceArrivee = getIndexByNomCase(caseDestination);
-        updateCell((StackPane) gridPane.getChildren().get(indiceArrivee),caseDestination);
+        updateCell((StackPane) gridPane.getChildren().get(indiceArrivee),caseDestination,board);
     }
+
 }

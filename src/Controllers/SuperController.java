@@ -2,18 +2,13 @@ package Controllers;
 
 import Controllers.modelControllers.PartieController;
 import Controllers.viewControllers.*;
-import Exceptions.CustomException;
-import Models.Couleur;
-import Models.Partie;
+import Exceptions.DeplacementInterditException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
-
-import static Controllers.DeplacementsUtils.stringToDepartDestination;
-import static Models.Utils.PartieUtils.jouerCoup;
 
 public class SuperController {
     private BorderPane borderPane;
@@ -55,7 +50,7 @@ public class SuperController {
         this.controllerStatut = statutLoader.getController();
         this.controllerDebug = debugLoader.getController();
 
-        controllerEchiquier.createPlateuDeJeu();
+        controllerEchiquier.createPlateuDeJeu(partieController.getEchiquier());
         initialiserDep();
 
     }
@@ -83,30 +78,40 @@ public class SuperController {
 
     public void demandeDeplacement(){
 
-        try {
-            String deplacement = controllerDeplacement.dep.getText();
+        String deplacement = controllerDeplacement.dep.getText();
 
-            String tmp = stringToDepartDestination(Partie.plateau,deplacement, Couleur.BLANC);
-            String [] cases = tmp.split(",");
+        try { // Si la saisie du déplacement est correcte.
+            String [] cases = partieController.getPartie().getPlateau().stringToDepartDestination(deplacement, partieController.getPartie().getJoueurActif());
             String depart =cases[0];
             String destination = cases[1];
 
-            System.out.println(depart + " -> " + destination);
-            //Verifier que le deplacement est correcte.
-            String statutPartie = jouerCoup(Partie.plateau,depart,destination);
+            System.out.println("TEST APRES saisie déplacement");
 
-            controllerEchiquier.updateGridPanel(depart,destination);
+            partieController.getPartie().jouerCoup(depart,destination);
+            controllerEchiquier.updateGridPanel(depart,destination,partieController.getEchiquier());
             controllerDeroulement.updateCoupPartie(deplacement);
             partieController.ajouterHistoriqueCoup(deplacement);
-            partieController.ajouterPlateauHistorique();
+            int nbRep = partieController.ajouterPlateauHistorique(); // Retourne le nombre de répétition pour eviter un parcours supplémentaire plus tard
+
+            String statutPartie;
+
+            switch (partieController.getPartie().statutPartie(nbRep)){
+                case -1 : statutPartie = "Nul"; break;
+                case 1 : statutPartie = "Echec aux "+partieController.getPartie().getJoueurActif().getCouleurOpposee().toString(); break;
+                case 2 : statutPartie = "Echec et mat. Victoire du joueur "+partieController.getPartie().getJoueurActif(); break;
+                default: // case 0
+                    statutPartie = "Partie en cours ...";
+            }
+
+
+
             controllerDebug.setStatutDebug(statutPartie);
 
-        } catch (CustomException e) {
-            controllerDebug.setStatutDebug(e.getMessage());
-            System.out.println(e+ " : "+controllerDeplacement.dep.getText());
-            //e.printStackTrace();
-        }
+            partieController.getPartie().changerJoueur();
 
+        } catch (DeplacementInterditException e) { // Sinon on met juste à jour l'affichage en bas et on continue d'attendre un coup correct.
+            controllerDebug.setStatutDebug(e.getMessage());
+        }
 
     }
 

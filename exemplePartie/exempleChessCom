@@ -1,0 +1,17 @@
+[Event "Live Chess"]
+[Site "Chess.com"]
+[Date "2021.04.24"]
+[Round "?"]
+[White "cleb0"]
+[Black "Dorothee445"]
+[Result "0-1"]
+[ECO "B01"]
+[WhiteElo "712"]
+[BlackElo "796"]
+[TimeControl "180"]
+[EndTime "15:24:32 PDT"]
+[Termination "Dorothee445 won by resignation"]
+
+1. e4 d5 2. Nc3 d4 3. Nd5 e6 4. Nf4 e5 5. Nd5 Be6 6. Bc4 c6 7. Nc7+ Qxc7 8. Bxe6
+fxe6 9. d3 Nd7 10. Qh5+ g6 11. Qg5 Be7 12. Qg4 Ngf6 13. Qg5 Bb4+ 14. c3 dxc3 15.
+bxc3 Bxc3+ 16. Bd2 Bxa1 17. Qh6 O-O-O 18. Qg7 0-1
