@@ -117,11 +117,9 @@ public class Plateau {
                             caseDestination = "" + deplacement.charAt(3) + deplacement.charAt(4);
                         } else
                             return new String[] {""+deplacement.charAt(1) + deplacement.charAt(2),""+deplacement.charAt(3) + deplacement.charAt(4)};
-//                        return ""+deplacement.charAt(1) + deplacement.charAt(2)+","+deplacement.charAt(3) + deplacement.charAt(4);
                         break;
                     case 6 :
                         return new String[] {""+deplacement.charAt(1) + deplacement.charAt(2),""+deplacement.charAt(4) + deplacement.charAt(5)};
-//                        return ""+deplacement.charAt(1) + deplacement.charAt(2)+","+deplacement.charAt(4) + deplacement.charAt(5);
                 }
         }
 
@@ -159,7 +157,6 @@ public class Plateau {
                     for (int i = 0 ; i < destAutorises.size() ; i++) {
                         Plateau plateauTest = new Plateau(echiquier);
                         plateauTest.deplacerPieceSansVerif(entry.getKey(),destAutorises.get(i));
-//                        Map<String, Piece> plateauTest = testDeplacerPiece(new HashMap<>(plateauActuel), entry.getKey(), destAutorises.get(i));
                         if (! plateauTest.isCheck(caseRoi)) {
                             System.out.println("Plus d'échec en faisant "+entry.getKey()+ " -> "+destAutorises.get(i));
                             return false;
@@ -178,14 +175,13 @@ public class Plateau {
      * @return un booléen qui indique si la pièce se trouvant en nomCase risque de se faire manger.
      */
     public boolean estMenacee(String nomCase){
-        System.out.println("estMenacee("+nomCase+")");
+
         Couleur couleurPiece = echiquier.get(nomCase).getCouleurPiece();
 
         for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
             Piece pieceActuelle = entry.getValue();
             if (!pieceActuelle.getCouleurPiece().equals(couleurPiece) ){ // Pour chaque piece de couleur adverse
-                //if(pieceActuelle.getMateriel().equals(Piece.NomMateriel.ROI) ) { // on regarde que nomCase ne soit pas voisine de ce roi
-                if(pieceActuelle instanceof Roi) {
+               if(pieceActuelle instanceof Roi) {
                     ArrayList<String> directionDeplacements = new ArrayList<>() {
                         {
                             add("HautGauche");
@@ -208,8 +204,6 @@ public class Plateau {
                     }
                 } else
                 if( echiquier.get(entry.getKey()).getCasesAccessibles(echiquier,entry.getKey()).contains(nomCase)) {
-                /*if( getDeplacementsAutorises(entry.getKey(),plateauActuel).contains(nomCase)) {*/
-                    System.out.println(nomCase + " est menacée par " + entry.getKey() + " !");
                     return true;
                 }
             }
@@ -235,7 +229,6 @@ public class Plateau {
      * ou de voir si la situation du joueur est améliorée dans le cadre de l'IA
      */
     public Map<String, Piece> deplacerPieceSansVerif(String caseDepart, String caseDestination) {
-        System.out.println("--------\nDéplacement SansVerif : "+caseDepart + " -> "+caseDestination + " // "+echiquier);
         echiquier.put(caseDestination,echiquier.get(caseDepart));
         echiquier.remove(caseDepart);
         return echiquier;
@@ -255,10 +248,6 @@ public class Plateau {
         plateauTest.deplacerPieceSansVerif(caseDepart,caseDestination);
         if ( ! plateauTest.isCheck(plateauTest.getCaseRoi(maCouleur)))
             return plateauTest.echiquier;
-        /*plateauActuel = testDeplacerPiece(new HashMap<>(plateauActuel),caseDepart,caseDestination);
-        if (!isCheck(plateauActuel,getCaseRoi(plateauActuel,maCouleur))) { // Quand je me déplace je ne créé pas d'echec a mon propre roi
-            return plateauActuel;
-        }*/
         else
             return null;
     }
@@ -276,13 +265,6 @@ public class Plateau {
         imaginePlateau(caseDepart,caseDestination) != null) {
             echiquier.put(caseDestination,echiquier.get(caseDepart));
             echiquier.remove(caseDepart);
-        /*if (getDeplacementsAutorises(caseDepart,board).contains(caseDestination) &&
-                imaginePlateau(new HashMap<>(board),caseDepart,caseDestination) != null ) {
-            board.put(caseDestination,board.get(caseDepart));
-            board.remove(caseDepart);
-*/
-            // Verifier s'il y a echec ou echec et mat !
-
         } else {
             System.out.println("Déplacement Illégal !");
         }

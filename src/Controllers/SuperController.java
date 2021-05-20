@@ -26,7 +26,7 @@ public class SuperController {
         //TODO : Gerer le lancement d'une nouvelle partie onClick pour eviter de relancer l'application
         System.out.println("SuperController - Constructeur");
 
-        partieController = new PartieController();
+
         borderPane = new BorderPane();
 
         String pathToViews = "../Views/";
@@ -50,19 +50,35 @@ public class SuperController {
         this.controllerStatut = statutLoader.getController();
         this.controllerDebug = debugLoader.getController();
 
-        controllerEchiquier.createPlateuDeJeu(partieController.getEchiquier());
 
         // Initialisation des actions sur les différents Button et Textfields
         initialiserDep();
         initialiserChargementFichier();
         initialiserNouvellePartie();
 
+
+        lancerNouvellePartie(true);
     }
 
 
     public BorderPane getBorderPane() {
         return borderPane;
     }
+
+    private void lancerNouvellePartie(boolean premierePartie){
+        this.partieController = new PartieController();
+
+        if (premierePartie)
+            controllerEchiquier.creerPlateauDeJeu(partieController.getEchiquier());
+        else {
+            // TODO : remettre tout les affichages à 0.
+            controllerEchiquier.updateTotalGridPane(partieController.getEchiquier());
+            controllerDeroulement.initialize();
+        }
+
+
+    }
+
 
     public void initialiserDep(){
         controllerDeplacement.dep.setTextFormatter(new TextFormatter<String>(change ->
@@ -85,13 +101,10 @@ public class SuperController {
     public void initialiserNouvellePartie(){
         controllerStatut.nouvellePartie.setOnAction(actionEvent -> {
             System.out.println("Nouvelle partie demandée");
-            lancerNouvellePartie();
+            lancerNouvellePartie(false);
         });
     }
 
-    private void lancerNouvellePartie(){
-
-    }
 
     private void demandeDeplacement(String deplacement){
 
@@ -102,10 +115,10 @@ public class SuperController {
             String depart =cases[0];
             String destination = cases[1];
 
-            System.out.println("TEST APRES saisie déplacement");
-
             partieController.getPartie().jouerCoup(depart,destination);
-            controllerEchiquier.updateGridPanel(depart,destination,partieController.getEchiquier());
+            System.out.println("\n" + "Coup joué ("+partieController.getPartie().getJoueurActif().toString()+") : "+ depart+"\t ->\t"+destination);
+            //controllerEchiquier.updateGridPanel(depart,destination,this.partieController.getEchiquier());
+            controllerEchiquier.updateDeplacementGridPane(depart,destination,partieController.getEchiquier());
             controllerDeroulement.updateCoupPartie(deplacement);
             partieController.ajouterHistoriqueCoup(deplacement);
             int nbRep = partieController.ajouterPlateauHistorique(); // Retourne le nombre de répétition pour eviter un parcours supplémentaire plus tard
@@ -132,8 +145,6 @@ public class SuperController {
 
     }
 
-
-
     private void lectureFichier(String filename){
         String pathToExemplePartie = "/Users/xavierwork/IdeaProjects/ChessFX/exemplePartie/";
         String extensionFichier = ".txt";
@@ -156,7 +167,8 @@ public class SuperController {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            controllerDebug.setStatutDebug(e.getMessage());
+            //e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
