@@ -8,7 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
+import java.io.*;
 
 public class SuperController {
     private BorderPane borderPane;
@@ -23,11 +23,11 @@ public class SuperController {
 
 
     public SuperController() throws IOException {
+        //TODO : Gerer le lancement d'une nouvelle partie onClick pour eviter de relancer l'application
         System.out.println("SuperController - Constructeur");
 
         partieController = new PartieController();
         borderPane = new BorderPane();
-
 
         String pathToViews = "../Views/";
         FXMLLoader deroulementLoader = new FXMLLoader(getClass().getResource(pathToViews+"deroulement.fxml"));
@@ -51,7 +51,11 @@ public class SuperController {
         this.controllerDebug = debugLoader.getController();
 
         controllerEchiquier.createPlateuDeJeu(partieController.getEchiquier());
+
+        // Initialisation des actions sur les différents Button et Textfields
         initialiserDep();
+        initialiserChargementFichier();
+        initialiserNouvellePartie();
 
     }
 
@@ -61,24 +65,37 @@ public class SuperController {
     }
 
     public void initialiserDep(){
-        System.out.println("TEST SuperController");
         controllerDeplacement.dep.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().length() <= 6 ? change : null));
         controllerDeplacement.dep.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER)  {
-                System.out.println("ENTRER");
-                controllerDeplacement.dep.setText(controllerDeplacement.dep.getText(0, controllerDeplacement.dep.getLength()-1));
-                if (controllerDeplacement.dep.getText().length()>=2) {
-                    demandeDeplacement();
-                    controllerDeplacement.dep.setText("");
-                }
+                demandeDeplacement(controllerDeplacement.dep.getText(0,controllerDeplacement.dep.getLength()-1));
+                 controllerDeplacement.dep.setText("");
             }
         });
     }
+    public void initialiserChargementFichier(){
+        controllerStatut.chargementFichier.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER)  {
+                lectureFichier(controllerStatut.chargementFichier.getText(0, controllerStatut.chargementFichier.getLength()-1)); // -1 pour retirer l'ENTRER
+                controllerStatut.chargementFichier.setText("");
+            }
+        });
+    }
+    public void initialiserNouvellePartie(){
+        controllerStatut.nouvellePartie.setOnAction(actionEvent -> {
+            System.out.println("Nouvelle partie demandée");
+            lancerNouvellePartie();
+        });
+    }
 
-    public void demandeDeplacement(){
+    private void lancerNouvellePartie(){
 
-        String deplacement = controllerDeplacement.dep.getText();
+    }
+
+    private void demandeDeplacement(String deplacement){
+
+        //String deplacement = controllerDeplacement.dep.getText();
 
         try { // Si la saisie du déplacement est correcte.
             String [] cases = partieController.getPartie().getPlateau().stringToDepartDestination(deplacement, partieController.getPartie().getJoueurActif());
@@ -115,6 +132,38 @@ public class SuperController {
 
     }
 
+
+
+    private void lectureFichier(String filename){
+        String pathToExemplePartie = "/Users/xavierwork/IdeaProjects/ChessFX/exemplePartie/";
+        String extensionFichier = ".txt";
+
+        File fichier =new File(pathToExemplePartie+filename+extensionFichier);
+        FileReader fileR = null;
+        try {
+            fileR = new FileReader(fichier);
+            BufferedReader bufferedR = new BufferedReader(fileR);
+
+            String s;
+            String[] mots =null;
+
+            while((s=bufferedR.readLine())!=null) {
+                mots=s.split(" ");
+                for (String wrd : mots) {
+                    if (! (wrd.charAt(1) == '.')){ // Si on est pas dans le cadre d'un numéro de coup
+                        demandeDeplacement(wrd);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 
 
 }

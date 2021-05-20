@@ -1,0 +1,5 @@
+1. e4 e5
+2. Qh5 Qh4
+3. Qh4 g5
+4. Qg5 Bh6
+5. Qe5 Ne7
