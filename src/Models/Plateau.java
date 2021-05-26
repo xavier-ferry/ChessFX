@@ -8,16 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Plateau {
-    /* TODO :  Supprimer les commentaires inutiles */
 
-    /* TODO : Retirer les affichages de débug */
     private Map<String, Piece> echiquier;
 
     public Plateau(){
         this.echiquier = new HashMap<>();
         initialiserPlateau();
     }
-    public Plateau(Map <String,Piece> plateauACopier){ this.echiquier = new HashMap<>(plateauACopier);}
+    public Plateau(Map <String,Piece> plateauACopier){
+        this.echiquier = new HashMap<>(plateauACopier);
+    }
 
     private void initialiserPlateau(){
         // PARTIE BLANC
@@ -50,9 +50,19 @@ public class Plateau {
     }
     @Override
     public String toString() {
-        return "Plateau{" +
-                "board=" + echiquier +
-                '}';
+        String blancs = "";
+        String noirs = "";
+
+        for (Map.Entry<String,Piece> entry : echiquier.entrySet()){
+            switch (entry.getValue().getCouleurPiece()){
+                case NOIR: noirs+= entry.toString() + " - "; break;
+                case BLANC: blancs += entry.toString() + " - ";
+            }
+        }
+
+        return "---\nPlateau{" +
+                "board=\n" + blancs +"\n"+noirs+
+                "}\n---\n";
     }
     public Map<String, Piece> getEchiquier() { return echiquier; }
     public String getCaseRoi(Couleur couleurRecherchee){
@@ -149,63 +159,88 @@ public class Plateau {
      * @return un booléen correspondant au fait que le roi en caseRoi est echec et mat
      */
     public boolean isCheckMate( String caseRoi) {
-        Couleur couleurRoi = echiquier.get(caseRoi).getCouleurPiece();
-        ArrayList<String> destAutorises = echiquier.get(caseRoi).getCasesAccessibles(echiquier,caseRoi);
-        if (destAutorises.size() == 0){
+        Piece monRoi = echiquier.get(caseRoi);
+
+        ArrayList<String> destAutorises = monRoi.getCasesAccessibles(echiquier,caseRoi);
+        for (String uneDestination : destAutorises){
+            if (!estMenacee(uneDestination,monRoi.getCouleurPiece()))
+                return false;
+        }
+        //Si je n'ai pas trouvé de déplacement autorisé pour mon roi :
+
+        for (Map.Entry<String,Piece> entry : echiquier.entrySet()){
+            if (entry.getValue().getCouleurPiece() == monRoi.getCouleurPiece()){ // Tentative d'interception
+                for (String destinationSauvetage : entry.getValue().getCasesAccessibles(getEchiquier(),entry.getKey())) {
+                    Plateau plateauTest = new Plateau(this.echiquier);
+                    assert(plateauTest.getEchiquier() != null);
+                    Map<String,Piece> mapDebug = plateauTest.imaginePlateau(entry.getKey(),destinationSauvetage);
+                    if( mapDebug != null) {
+                        return false;
+                        /*if (!plateauTest.isCheck(caseRoi))
+                            return false;*/
+                    }
+                }
+            }
+        }
+        /* TODO :  Gérer la couverture de l'échec grace à une autre piece
+        else { // Si le Roi ne peut pas bouger. On regarde si on peut couvrir avec une autre pièce
             for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
-                if (entry.getValue().getCouleurPiece().equals(couleurRoi)){
-                    for (int i = 0 ; i < destAutorises.size() ; i++) {
-                        Plateau plateauTest = new Plateau(echiquier);
-                        plateauTest.deplacerPieceSansVerif(entry.getKey(),destAutorises.get(i));
-                        if (! plateauTest.isCheck(caseRoi)) {
-                            System.out.println("Plus d'échec en faisant "+entry.getKey()+ " -> "+destAutorises.get(i));
+                if (entry.getValue().getCouleurPiece().equals(couleurRoi)) {
+                    ArrayList<String> casesAccessibles = echiquier.get(entry.getKey()).getCasesAccessibles(echiquier, entry.getKey());
+                    for (String destinationTest : casesAccessibles) {
+                        Plateau plateauTest = new Plateau(imaginePlateau(entry.getKey(), destinationTest));
+                        if (!(plateauTest.getEchiquier() == null) && !plateauTest.isCheck(caseRoi)) {
+                            System.out.println("Plus d'échec en faisant "+entry.getKey()+" -> "+destinationTest);
                             return false;
                         }
                     }
                 }
-            }
-            return true;
-        }
 
-        return false;
+
+            }
+        }
+        */
+        return true;
     }
 
     /**
      * @param nomCase
-     * @return un booléen qui indique si la pièce se trouvant en nomCase risque de se faire manger.
+     * @return le nombre de pièces alliées qui protègent nomCase
      */
-    public boolean estMenacee(String nomCase){
-
+    public int estProtegee(String nomCase){
+        int res = 0;
         Couleur couleurPiece = echiquier.get(nomCase).getCouleurPiece();
 
         for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
             Piece pieceActuelle = entry.getValue();
-            if (!pieceActuelle.getCouleurPiece().equals(couleurPiece) ){ // Pour chaque piece de couleur adverse
-               if(pieceActuelle instanceof Roi) {
-                    ArrayList<String> directionDeplacements = new ArrayList<>() {
-                        {
-                            add("HautGauche");
-                            add("HautDroite");
-                            add("BasGauche");
-                            add("BasDroite");
-                            add("Bas");
-                            add("Haut");
-                            add("Gauche");
-                            add("Droite");
-                        }
-                    };
+            if (pieceActuelle.getCouleurPiece().equals(couleurPiece)) { // Pour chaque piece de couleur adverse
+                if (echiquier.get(entry.getKey()).getCasesDefendues(echiquier,entry.getKey()).contains(nomCase))
+                    res ++;
+            }
+        }
+        return res;
+    }
 
-                    int i = 0;
-                    while (i < directionDeplacements.size()) {
-                        String nouvelleCase = pieceActuelle.caseVoisin(nomCase, directionDeplacements.get(i));
-                        if (nouvelleCase != null && nouvelleCase.equals(nomCase))
+    /**
+     * @param nomCase, couleurMenancante
+     * @return un booléen qui indique si la pièce se trouvant en nomCase risque de se faire manger.
+     * S'il n'existe pas de piece en nomCase on a besoin de connaitre la couleur qui peut être menacer
+     */
+    public boolean estMenacee(String nomCase, Couleur couleurMenacee){
+        for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
+            Piece pieceActuelle = entry.getValue();
+            if (!pieceActuelle.getCouleurPiece().equals(couleurMenacee) ){ // Pour chaque piece de couleur adverse
+                if(pieceActuelle instanceof Roi){
+                    if( pieceActuelle.getCasesDefendues(echiquier,entry.getKey()).contains(nomCase)) { // TODO : Problème si Deux Roi cote a cote ?
+                        //if (estProtegee(nomCase) == 0)
                             return true;
-                        i++;
                     }
-                } else
-                if( echiquier.get(entry.getKey()).getCasesAccessibles(echiquier,entry.getKey()).contains(nomCase)) {
-                    return true;
+                }else {
+                    if( pieceActuelle.getCasesAccessibles(echiquier,entry.getKey()).contains(nomCase)) {
+                        return true;
+                    }
                 }
+
             }
         }
 
@@ -217,7 +252,7 @@ public class Plateau {
      * @return true si le roi en caseRoi est menacé, false sinon
      */
     public boolean isCheck(String caseRoi){
-        return estMenacee(caseRoi);
+        return estMenacee(caseRoi, echiquier.get(caseRoi).getCouleurPiece());
     }
 
 
@@ -243,10 +278,10 @@ public class Plateau {
      * null sinon.
      */
     private Map<String, Piece> imaginePlateau(String caseDepart, String caseDestination){
-        Couleur maCouleur = echiquier.get(caseDepart).getCouleurPiece();
-        Plateau plateauTest = new Plateau((echiquier));
+        Couleur couleurJoueurActif = echiquier.get(caseDepart).getCouleurPiece();
+        Plateau plateauTest = new Plateau(echiquier);
         plateauTest.deplacerPieceSansVerif(caseDepart,caseDestination);
-        if ( ! plateauTest.isCheck(plateauTest.getCaseRoi(maCouleur)))
+        if ( ! plateauTest.isCheck(plateauTest.getCaseRoi(couleurJoueurActif)))
             return plateauTest.echiquier;
         else
             return null;
@@ -260,13 +295,14 @@ public class Plateau {
      * si la piece en caseDepart peut se rendre en caseDestination et que ca ne met pas son propre roi en echec
      * alors on déplace ladite piece.
      */
-    public void deplacerPiece(String caseDepart, String caseDestination ){
+    public void deplacerPiece(String caseDepart, String caseDestination ) throws DeplacementInterditException{
+
         if (echiquier.get(caseDepart).getCasesAccessibles(echiquier,caseDepart).contains(caseDestination) &&
         imaginePlateau(caseDepart,caseDestination) != null) {
             echiquier.put(caseDestination,echiquier.get(caseDepart));
             echiquier.remove(caseDepart);
         } else {
-            System.out.println("Déplacement Illégal !");
+            throw new DeplacementInterditException("Déplacement Illégal !");
         }
     }
 
@@ -337,3 +373,90 @@ public class Plateau {
         return blancEnManque && noirEnManque;
     }
 }
+
+
+/* isCheck, isCheckMate, estMenacee - 1.0
+
+public boolean isCheckMate( String caseRoi) {
+
+    Couleur couleurRoi = echiquier.get(caseRoi).getCouleurPiece();
+    ArrayList<String> destAutorises = echiquier.get(caseRoi).getCasesAccessibles(echiquier,caseRoi);
+    if (destAutorises.size() == 0){
+        for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
+            if (entry.getValue().getCouleurPiece().equals(couleurRoi)){
+                for (int i = 0 ; i < destAutorises.size() ; i++) {
+                    Plateau plateauTest = new Plateau(echiquier);
+                    plateauTest.deplacerPieceSansVerif(entry.getKey(),destAutorises.get(i)); // avec Verif ?
+                    if (! plateauTest.isCheck(caseRoi)) { // Verifier la nouvelle case ?
+                        System.out.println("Plus d'échec en faisant "+entry.getKey()+ " -> "+destAutorises.get(i));
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+        // TODO :  Gérer la couverture de l'échec grace à une autre piece
+        else { // Si le Roi ne peut pas bouger. On regarde si on peut couvrir avec une autre pièce
+            for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
+                if (entry.getValue().getCouleurPiece().equals(couleurRoi)) {
+                    ArrayList<String> casesAccessibles = echiquier.get(entry.getKey()).getCasesAccessibles(echiquier, entry.getKey());
+                    for (String destinationTest : casesAccessibles) {
+                        Plateau plateauTest = new Plateau(imaginePlateau(entry.getKey(), destinationTest));
+                        if (!(plateauTest.getEchiquier() == null) && !plateauTest.isCheck(caseRoi)) {
+                            System.out.println("Plus d'échec en faisant "+entry.getKey()+" -> "+destinationTest);
+                            return false;
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+    return true;
+}
+
+    public boolean estMenacee(String nomCase){
+
+        Couleur couleurPiece = echiquier.get(nomCase).getCouleurPiece();
+
+        for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
+            Piece pieceActuelle = entry.getValue();
+            if (!pieceActuelle.getCouleurPiece().equals(couleurPiece) ){ // Pour chaque piece de couleur adverse
+                if(pieceActuelle instanceof Roi) {
+                    ArrayList<String> directionDeplacements = new ArrayList<>() {
+                        {
+                            add("HautGauche");
+                            add("HautDroite");
+                            add("BasGauche");
+                            add("BasDroite");
+                            add("Bas");
+                            add("Haut");
+                            add("Gauche");
+                            add("Droite");
+                        }
+                    };
+
+                    int i = 0;
+                    while (i < directionDeplacements.size()) {
+                        String nouvelleCase = pieceActuelle.caseVoisin(nomCase, directionDeplacements.get(i));
+                        if (nouvelleCase != null && nouvelleCase.equals(nomCase))
+                            return true;
+                        i++;
+                    }
+                } else
+                if( echiquier.get(entry.getKey()).getCasesAccessibles(echiquier,entry.getKey()).contains(nomCase)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isCheck(String caseRoi){
+        return estMenacee(caseRoi);
+    }
+
+
+ */

@@ -3,3 +3,4 @@
 3. Qh4 g5
 4. Qg5 Bh6
 5. Qe5 Ne7
+6. Qh8

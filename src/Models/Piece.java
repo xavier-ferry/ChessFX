@@ -10,10 +10,34 @@ public interface Piece {
     @Override
     String toString();
 
+    //TODO : Avoir l'attribut couleur dans l'interface pour ne pas redéfinir cette fonction partout ?
     Couleur getCouleurPiece();
     String getNomPiece();
 
-    ArrayList<String> getCasesAccessibles(Map<String,Piece> board,String nomCase);
+    default  ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase){
+        ArrayList<String> res = new ArrayList<>() ;
+        for (String caseActuelle : getCasesDefendues(board,nomCase)){ //On va retirer les cases avec une piece de meme couleur
+            if (board.get(caseActuelle) == null || board.get(caseActuelle).getCouleurPiece() != getCouleurPiece())
+                res.add(caseActuelle);
+        }
+        return res;
+    }
+    /*default  ArrayList<String> getCasesJouables(Map<String,Piece> board, String nomCase){
+        ArrayList<String> res = getCasesDefendues(board,nomCase);
+        for (String caseActuelle : res){ //On va retirer les cases avec une piece de meme couleur
+            if (board.get(caseActuelle) != null && board.get(caseActuelle).getCouleurPiece() == getCouleurPiece())
+                res.remove(caseActuelle);
+        }
+        return res;
+    }*/
+
+    default ArrayList<String> getCasesDefendues(Map<String,Piece> board, String nomCase){
+        return getCasesDefenduesGenerique(board,nomCase,getDirections());
+    }
+
+    // TODO : Meilleure solution ? getDirections() pourrait être privé dans les classes ?
+    default ArrayList<String> getDirections(){ return null;}
+
 
     private String caseBas(String nomCase){
         char lettre = nomCase.charAt(0);
@@ -135,11 +159,26 @@ public interface Piece {
         return ( nomCase != null && board.get(nomCase) == null);
     }
 
-    default ArrayList<String> getDeplacementsGenerique(Map<String, Piece> board, String nomCase, ArrayList<String> directionDeplacements){
+    default ArrayList<String> getCasesDefenduesGenerique(Map<String, Piece> board, String nomCase, ArrayList<String> directionDeplacements){
         ArrayList<String> res = new ArrayList<>();
         String nouvelleCase = nomCase;
         int i = 0;
         while (i < directionDeplacements.size()){
+            nouvelleCase = caseVoisin(nouvelleCase,directionDeplacements.get(i));
+            if(nouvelleCase != null) {
+                if (bouger(board, nouvelleCase)) {
+                    res.add(nouvelleCase);
+                } else {
+                    res.add(nouvelleCase);
+                    i++;
+                    nouvelleCase = nomCase;
+                }
+            } else {
+                i++;
+                nouvelleCase = nomCase;
+            }
+        }
+        /*while (i < directionDeplacements.size()){
             nouvelleCase = caseVoisin(nouvelleCase,directionDeplacements.get(i));
             if (bouger(board,nouvelleCase)){
                 res.add(nouvelleCase);
@@ -151,7 +190,7 @@ public interface Piece {
                 i++;
                 nouvelleCase = nomCase;
             }
-        }
+        }*/
         return res;
     }
 }

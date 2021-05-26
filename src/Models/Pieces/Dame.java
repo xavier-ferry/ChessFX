@@ -4,7 +4,6 @@ import Models.Couleur;
 import Models.Piece;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Dame implements Piece {
 
@@ -18,21 +17,21 @@ public class Dame implements Piece {
     }
 
     @Override
-    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
-        ArrayList<String> directionDeplacements = new ArrayList<>(){
-        {
-            add("HautGauche");
-            add("HautDroite");
-            add("BasGauche");
-            add("BasDroite");
-            add("Bas");
-            add("Haut");
-            add("Gauche");
-            add("Droite");
-        }
-    };
-        return getDeplacementsGenerique(board,nomCase,directionDeplacements);
+    public ArrayList<String> getDirections() {
+        return new ArrayList<>(){
+            {
+                add("HautGauche");
+                add("HautDroite");
+                add("BasGauche");
+                add("BasDroite");
+                add("Bas");
+                add("Haut");
+                add("Gauche");
+                add("Droite");
+            }
+        };
     }
+
 
     public String toString(){
         return nomPiece+couleurPiece.toString();

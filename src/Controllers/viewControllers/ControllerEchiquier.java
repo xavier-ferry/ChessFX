@@ -38,7 +38,6 @@ public class ControllerEchiquier {
         if (board.get(nomCase) != null){
             String nomFile = board.get(nomCase).toString();
             Image img = new Image("file:///Users/xavierwork/IdeaProjects/ChessFX/img/" + nomFile + ".png");
-            //TODO : Problème ici ->
             ImageView view = new ImageView(img);
             view.setFitHeight(50);
             view.setPreserveRatio(true);

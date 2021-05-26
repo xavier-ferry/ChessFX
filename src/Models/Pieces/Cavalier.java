@@ -20,7 +20,19 @@ public class Cavalier implements Piece {
     @Override
     public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
         ArrayList<String> res = new ArrayList<>();
-        ArrayList<String> casesATester = new ArrayList<>();
+        ArrayList<String> casesATester = getCasesDefendues(board,nomCase);
+
+        for (String s : casesATester) {
+            if (bouger(board,s) || manger(board,s))
+                res.add(s);
+        }
+
+        return res;
+    }
+
+    @Override
+    public ArrayList<String> getCasesDefendues(Map<String,Piece> board, String nomCase){
+        ArrayList<String> res = new ArrayList<>();
         char lettreCase = nomCase.charAt(0);
         int numeroCase = Character.getNumericValue(nomCase.charAt(1));
 
@@ -28,10 +40,10 @@ public class Cavalier implements Piece {
             char nouvelleLettreCase = (char) ((int) lettreCase + i);
             if (nouvelleLettreCase >= 'a' && nouvelleLettreCase <= 'h') {
                 if (numeroCase > 1) {
-                    casesATester.add("" + nouvelleLettreCase + ((char) numeroCase - 1));
+                    res.add("" + nouvelleLettreCase + ((char) numeroCase - 1));
                 }
                 if (numeroCase < 8) {
-                    casesATester.add("" + nouvelleLettreCase + ((char) numeroCase + 1));
+                    res.add("" + nouvelleLettreCase + ((char) numeroCase + 1));
                 }
             }
         }
@@ -39,20 +51,14 @@ public class Cavalier implements Piece {
             if (numeroCase + i <= 8 && numeroCase + i >= 1) {
                 char nouvelleLettreCase = (char) ((int) lettreCase - 1);
                 if (lettreCase >= 'a'){
-                    casesATester.add("" + nouvelleLettreCase + ((char) numeroCase + i));
+                    res.add("" + nouvelleLettreCase + ((char) numeroCase + i));
                 }
                 nouvelleLettreCase = (char) ((int) lettreCase + 1);
                 if (lettreCase <= 'h'){
-                    casesATester.add("" + nouvelleLettreCase + ((char) numeroCase + i));
+                    res.add("" + nouvelleLettreCase + ((char) numeroCase + i));
                 }
             }
         }
-        for (String s : casesATester) {
-            if (bouger(board,s) || manger(board,s)) {
-                res.add(s);
-            }
-        }
-
         return res;
     }
 
@@ -69,4 +75,6 @@ public class Cavalier implements Piece {
     public String getNomPiece() {
         return nomPiece;
     }
+
+
 }

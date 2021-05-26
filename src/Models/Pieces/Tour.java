@@ -4,7 +4,6 @@ import Models.Couleur;
 import Models.Piece;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Tour implements Piece {
 
@@ -17,9 +16,9 @@ public class Tour implements Piece {
         this.couleurPiece = couleur;
     }
 
-    @Override
-    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
-        ArrayList<String> directionDeplacements = new ArrayList<>(){
+
+    public ArrayList<String> getDirections(){
+        return new ArrayList<>(){
             {
                 add("Bas");
                 add("Haut");
@@ -27,7 +26,6 @@ public class Tour implements Piece {
                 add("Droite");
             }
         };
-        return getDeplacementsGenerique(board,nomCase,directionDeplacements);
     }
 
     public String toString(){

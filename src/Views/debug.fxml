@@ -2,10 +2,15 @@
 <?import javafx.scene.layout.HBox?>
 
 
+<?import javafx.scene.control.Button?>
 <HBox fx:controller="Controllers.viewControllers.ControllerDebug" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       prefHeight="50.0" spacing="5.0" alignment="CENTER">
             <children>
                 <Label text="" fx:id="statutDebug"/>
 
             </children>
+
+    <children>
+        <Button text="Sout Echiquier" fx:id="afficherEchiquier"/>
+    </children>
 </HBox>

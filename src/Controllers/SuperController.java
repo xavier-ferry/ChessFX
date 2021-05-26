@@ -23,7 +23,6 @@ public class SuperController {
 
 
     public SuperController() throws IOException {
-        //TODO : Gerer le lancement d'une nouvelle partie onClick pour eviter de relancer l'application
         System.out.println("SuperController - Constructeur");
 
 
@@ -55,6 +54,7 @@ public class SuperController {
         initialiserDep();
         initialiserChargementFichier();
         initialiserNouvellePartie();
+        initialiserAfficherEchiquier();
 
 
         lancerNouvellePartie(true);
@@ -104,6 +104,12 @@ public class SuperController {
             lancerNouvellePartie(false);
         });
     }
+    public void initialiserAfficherEchiquier(){
+        controllerDebug.afficherEchiquier.setOnAction(actionEvent -> {
+            System.out.println("Affichage echiquier demandée");
+            System.out.println(partieController.getPartie().getPlateau());
+        });
+    }
 
 
     private void demandeDeplacement(String deplacement){
@@ -116,7 +122,7 @@ public class SuperController {
             String destination = cases[1];
 
             partieController.getPartie().jouerCoup(depart,destination);
-            System.out.println("\n" + "Coup joué ("+partieController.getPartie().getJoueurActif().toString()+") : "+ depart+"\t ->\t"+destination);
+            System.out.println("***\t Coup joué ("+partieController.getPartie().getJoueurActif().toString()+") : "+ depart+"\t ->\t"+destination);
             //controllerEchiquier.updateGridPanel(depart,destination,this.partieController.getEchiquier());
             controllerEchiquier.updateDeplacementGridPane(depart,destination,partieController.getEchiquier());
             controllerDeroulement.updateCoupPartie(deplacement);
@@ -124,7 +130,6 @@ public class SuperController {
             int nbRep = partieController.ajouterPlateauHistorique(); // Retourne le nombre de répétition pour eviter un parcours supplémentaire plus tard
 
             String statutPartie;
-
             switch (partieController.getPartie().statutPartie(nbRep)){
                 case -1 : statutPartie = "Nul"; break;
                 case 1 : statutPartie = "Echec aux "+partieController.getPartie().getJoueurActif().getCouleurOpposee().toString(); break;
@@ -132,6 +137,7 @@ public class SuperController {
                 default: // case 0
                     statutPartie = "Partie en cours ...";
             }
+
 
 
 
@@ -161,6 +167,7 @@ public class SuperController {
             while((s=bufferedR.readLine())!=null) {
                 mots=s.split(" ");
                 for (String wrd : mots) {
+                    // TODO : Attention au format -> nullPointerException au chargement de test.
                     if (! (wrd.charAt(1) == '.')){ // Si on est pas dans le cadre d'un numéro de coup
                         demandeDeplacement(wrd);
                     }

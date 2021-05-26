@@ -18,8 +18,8 @@ public class Fou implements Piece {
     }
 
     @Override
-    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
-        ArrayList<String> directionDeplacements = new ArrayList<>(){
+    public ArrayList<String> getDirections(){
+        return new ArrayList<>(){
             {
                 add("HautGauche");
                 add("HautDroite");
@@ -27,7 +27,11 @@ public class Fou implements Piece {
                 add("BasDroite");
             }
         };
-        return getDeplacementsGenerique(board,nomCase,directionDeplacements);
+    }
+
+    @Override
+    public ArrayList<String> getCasesDefendues(Map<String, Piece> board, String nomCase) {
+        return getCasesDefenduesGenerique(board,nomCase,getDirections());
     }
 
     public String toString(){

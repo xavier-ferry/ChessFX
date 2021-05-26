@@ -20,9 +20,8 @@ public class Roi implements Piece {
     }
 
     @Override
-    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
-        // TODO : Gérer les roques
-        ArrayList<String> directionDeplacements = new ArrayList<>(){
+    public ArrayList<String> getDirections(){
+        return new ArrayList<>(){
             {
                 add("HautGauche");
                 add("HautDroite");
@@ -34,33 +33,40 @@ public class Roi implements Piece {
                 add("Droite");
             }
         };
+    }
+
+    @Override
+    public ArrayList<String> getCasesDefendues(Map<String,Piece> board, String nomCase){
+        ArrayList<String> directionDeplacements = getDirections();
         ArrayList<String> res = new ArrayList<>();
-        int i = 0;
-        while (i < directionDeplacements.size()){
-            String nouvelleCase = caseVoisin(nomCase,directionDeplacements.get(i));
 
-            /*if (bouger(nouvelleCase,board) || manger(nouvelleCase,board,roi.getCouleurPiece()))
-              // Tester si le roi se retrouve en echec
-                 res.add(nouvelleCase);
+        for (String maDirection : directionDeplacements){
+            String nouvelleCase = caseVoisin(nomCase, maDirection);
+            if (nouvelleCase != null)
+                res.add(nouvelleCase);
+        }
 
-            i++;*/
+        return res;
+    }
 
-            /* Problème avec cette version de la fonction :*/
+    @Override
+    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase) {
+        // TODO : Gérer les roques : ajouter un attribut booleen aDejaBougé au Roi et aux Tours.
+        // TODO : Gérer la prise en passant
+        // TODO : vérifier que cette version fonctionne
+
+        ArrayList<String> res = new ArrayList<>();
+        for (String nouvelleCase : getCasesDefendues(board,nomCase)){
+
             if (bouger(board,nouvelleCase) || manger(board,nouvelleCase)){
                 // Tester si le roi se retrouve en echec !
                 Plateau plateauTest = new Plateau(board);
                 plateauTest.deplacerPieceSansVerif(nomCase,nouvelleCase);
                 if (! plateauTest.isCheck(nouvelleCase))
-/*
-                Map<String,Piece> plateauTest = new HashMap<>(board);
-                plateauTest = testDeplacerPiece(plateauTest,nomCase,nouvelleCase);
-                if (! isCheck(plateauTest,nouvelleCase))
-*/
                     res.add(nouvelleCase);
                 else
                     System.out.println("Echec si je me déplace en "+nouvelleCase);
             }
-            i++;
 
 
         }
