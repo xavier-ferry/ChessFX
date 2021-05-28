@@ -1,5 +1,4 @@
 // TODO: Gérer l'extension du fichier de lecture.
-// TODO: L'appli donne echec et mat ici alors qu'on peut couvrir le roi avec le cavalier ou le fou.
 1. e4 e5
 2. Qh5 Qh4
 3. Qh4 g5

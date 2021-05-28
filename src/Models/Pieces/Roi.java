@@ -12,12 +12,17 @@ public class Roi implements Piece {
 
     private String nomPiece;
     private Couleur couleurPiece;
+    private boolean hasMoved;
 
 
     public Roi(Couleur couleur){
         this.nomPiece = "ROI";
         this.couleurPiece = couleur;
+        this.hasMoved = false;
     }
+
+    public void setHasMoved(){hasMoved = true;}
+
 
     @Override
     public ArrayList<String> getDirections(){
@@ -64,8 +69,6 @@ public class Roi implements Piece {
                 plateauTest.deplacerPieceSansVerif(nomCase,nouvelleCase);
                 if (! plateauTest.isCheck(nouvelleCase))
                     res.add(nouvelleCase);
-                else
-                    System.out.println("Echec si je me déplace en "+nouvelleCase);
             }
 
 

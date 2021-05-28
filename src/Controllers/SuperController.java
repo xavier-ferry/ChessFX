@@ -164,10 +164,9 @@ public class SuperController {
             String s;
             String[] mots =null;
 
-            while((s=bufferedR.readLine())!=null) {
+            while((s=bufferedR.readLine())!=null) { // TODO: Attention, pas très flex comme lecture de fichier ?
                 mots=s.split(" ");
                 for (String wrd : mots) {
-                    // TODO : Attention au format -> nullPointerException au chargement de test.
                     if (! (wrd.charAt(1) == '.')){ // Si on est pas dans le cadre d'un numéro de coup
                         demandeDeplacement(wrd);
                     }

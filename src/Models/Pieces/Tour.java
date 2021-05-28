@@ -9,12 +9,16 @@ public class Tour implements Piece {
 
     private String nomPiece;
     private Couleur couleurPiece;
+    private boolean hasMoved;
 
 
     public Tour(Couleur couleur){
         this.nomPiece = "TOUR";
         this.couleurPiece = couleur;
+        this.hasMoved = false;
     }
+
+    public void setHasMoved(){hasMoved = true;}
 
 
     public ArrayList<String> getDirections(){

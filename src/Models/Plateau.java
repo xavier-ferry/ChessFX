@@ -174,32 +174,11 @@ public class Plateau {
                     Plateau plateauTest = new Plateau(this.echiquier);
                     assert(plateauTest.getEchiquier() != null);
                     Map<String,Piece> mapDebug = plateauTest.imaginePlateau(entry.getKey(),destinationSauvetage);
-                    if( mapDebug != null) {
+                    if( mapDebug != null)
                         return false;
-                        /*if (!plateauTest.isCheck(caseRoi))
-                            return false;*/
-                    }
                 }
             }
         }
-        /* TODO :  Gérer la couverture de l'échec grace à une autre piece
-        else { // Si le Roi ne peut pas bouger. On regarde si on peut couvrir avec une autre pièce
-            for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
-                if (entry.getValue().getCouleurPiece().equals(couleurRoi)) {
-                    ArrayList<String> casesAccessibles = echiquier.get(entry.getKey()).getCasesAccessibles(echiquier, entry.getKey());
-                    for (String destinationTest : casesAccessibles) {
-                        Plateau plateauTest = new Plateau(imaginePlateau(entry.getKey(), destinationTest));
-                        if (!(plateauTest.getEchiquier() == null) && !plateauTest.isCheck(caseRoi)) {
-                            System.out.println("Plus d'échec en faisant "+entry.getKey()+" -> "+destinationTest);
-                            return false;
-                        }
-                    }
-                }
-
-
-            }
-        }
-        */
         return true;
     }
 
@@ -301,6 +280,10 @@ public class Plateau {
         imaginePlateau(caseDepart,caseDestination) != null) {
             echiquier.put(caseDestination,echiquier.get(caseDepart));
             echiquier.remove(caseDepart);
+
+            if (echiquier.get(caseDestination) instanceof Roi || echiquier.get(caseDestination) instanceof Tour){
+                echiquier.get(caseDestination).setHasMoved(); // TODO : gérer le roque
+            }
         } else {
             throw new DeplacementInterditException("Déplacement Illégal !");
         }
@@ -373,90 +356,3 @@ public class Plateau {
         return blancEnManque && noirEnManque;
     }
 }
-
-
-/* isCheck, isCheckMate, estMenacee - 1.0
-
-public boolean isCheckMate( String caseRoi) {
-
-    Couleur couleurRoi = echiquier.get(caseRoi).getCouleurPiece();
-    ArrayList<String> destAutorises = echiquier.get(caseRoi).getCasesAccessibles(echiquier,caseRoi);
-    if (destAutorises.size() == 0){
-        for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
-            if (entry.getValue().getCouleurPiece().equals(couleurRoi)){
-                for (int i = 0 ; i < destAutorises.size() ; i++) {
-                    Plateau plateauTest = new Plateau(echiquier);
-                    plateauTest.deplacerPieceSansVerif(entry.getKey(),destAutorises.get(i)); // avec Verif ?
-                    if (! plateauTest.isCheck(caseRoi)) { // Verifier la nouvelle case ?
-                        System.out.println("Plus d'échec en faisant "+entry.getKey()+ " -> "+destAutorises.get(i));
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-        // TODO :  Gérer la couverture de l'échec grace à une autre piece
-        else { // Si le Roi ne peut pas bouger. On regarde si on peut couvrir avec une autre pièce
-            for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
-                if (entry.getValue().getCouleurPiece().equals(couleurRoi)) {
-                    ArrayList<String> casesAccessibles = echiquier.get(entry.getKey()).getCasesAccessibles(echiquier, entry.getKey());
-                    for (String destinationTest : casesAccessibles) {
-                        Plateau plateauTest = new Plateau(imaginePlateau(entry.getKey(), destinationTest));
-                        if (!(plateauTest.getEchiquier() == null) && !plateauTest.isCheck(caseRoi)) {
-                            System.out.println("Plus d'échec en faisant "+entry.getKey()+" -> "+destinationTest);
-                            return false;
-                        }
-                    }
-                }
-
-
-            }
-        }
-
-    return true;
-}
-
-    public boolean estMenacee(String nomCase){
-
-        Couleur couleurPiece = echiquier.get(nomCase).getCouleurPiece();
-
-        for (Map.Entry<String,Piece> entry : echiquier.entrySet()) {
-            Piece pieceActuelle = entry.getValue();
-            if (!pieceActuelle.getCouleurPiece().equals(couleurPiece) ){ // Pour chaque piece de couleur adverse
-                if(pieceActuelle instanceof Roi) {
-                    ArrayList<String> directionDeplacements = new ArrayList<>() {
-                        {
-                            add("HautGauche");
-                            add("HautDroite");
-                            add("BasGauche");
-                            add("BasDroite");
-                            add("Bas");
-                            add("Haut");
-                            add("Gauche");
-                            add("Droite");
-                        }
-                    };
-
-                    int i = 0;
-                    while (i < directionDeplacements.size()) {
-                        String nouvelleCase = pieceActuelle.caseVoisin(nomCase, directionDeplacements.get(i));
-                        if (nouvelleCase != null && nouvelleCase.equals(nomCase))
-                            return true;
-                        i++;
-                    }
-                } else
-                if( echiquier.get(entry.getKey()).getCasesAccessibles(echiquier,entry.getKey()).contains(nomCase)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isCheck(String caseRoi){
-        return estMenacee(caseRoi);
-    }
-
-
- */
