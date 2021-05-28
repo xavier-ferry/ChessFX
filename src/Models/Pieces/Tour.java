@@ -5,44 +5,23 @@ import Models.Piece;
 
 import java.util.ArrayList;
 
-public class Tour implements Piece {
+public class Tour extends Piece {
 
-    private String nomPiece;
-    private Couleur couleurPiece;
     private boolean hasMoved;
 
 
     public Tour(Couleur couleur){
-        this.nomPiece = "TOUR";
-        this.couleurPiece = couleur;
-        this.hasMoved = false;
-    }
-
-    public void setHasMoved(){hasMoved = true;}
-
-
-    public ArrayList<String> getDirections(){
-        return new ArrayList<>(){
+        super("TOUR",couleur,new ArrayList<>(){
             {
                 add("Bas");
                 add("Haut");
                 add("Gauche");
                 add("Droite");
             }
-        };
+        });
+
+        this.hasMoved = false;
     }
 
-    public String toString(){
-        return nomPiece+couleurPiece.toString();
-    }
-
-    @Override
-    public Couleur getCouleurPiece() {
-        return couleurPiece;
-    }
-
-    @Override
-    public String getNomPiece() {
-        return nomPiece;
-    }
+    public void setHasMoved(){hasMoved = true;}
 }

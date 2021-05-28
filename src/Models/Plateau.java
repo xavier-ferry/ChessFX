@@ -280,10 +280,10 @@ public class Plateau {
         imaginePlateau(caseDepart,caseDestination) != null) {
             echiquier.put(caseDestination,echiquier.get(caseDepart));
             echiquier.remove(caseDepart);
-
+/*
             if (echiquier.get(caseDestination) instanceof Roi || echiquier.get(caseDestination) instanceof Tour){
                 echiquier.get(caseDestination).setHasMoved(); // TODO : gérer le roque
-            }
+            }*/
         } else {
             throw new DeplacementInterditException("Déplacement Illégal !");
         }

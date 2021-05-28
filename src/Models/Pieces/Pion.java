@@ -6,15 +6,10 @@ import Models.Piece;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Pion implements Piece {
-
-    private String nomPiece;
-    private Couleur couleurPiece;
-
+public class Pion extends Piece {
 
     public Pion(Couleur couleur){
-        this.nomPiece = "PION";
-        this.couleurPiece = couleur;
+        super("PION",couleur,null);
     }
 
     @Override
@@ -81,19 +76,4 @@ public class Pion implements Piece {
 
         return res;
     }
-
-    public String toString(){
-        return nomPiece+couleurPiece.toString();
-    }
-
-    @Override
-    public Couleur getCouleurPiece() {
-        return couleurPiece;
-    }
-
-    @Override
-    public String getNomPiece() {
-        return nomPiece;
-    }
-
 }

@@ -5,20 +5,10 @@ import Models.Piece;
 
 import java.util.ArrayList;
 
-public class Dame implements Piece {
-
-    private String nomPiece;
-    private Couleur couleurPiece;
-
+public class Dame extends Piece {
 
     public Dame(Couleur couleur){
-        this.nomPiece = "DAME";
-        this.couleurPiece = couleur;
-    }
-
-    @Override
-    public ArrayList<String> getDirections() {
-        return new ArrayList<>(){
+        super("DAME",couleur,new ArrayList<>(){
             {
                 add("HautGauche");
                 add("HautDroite");
@@ -29,22 +19,7 @@ public class Dame implements Piece {
                 add("Gauche");
                 add("Droite");
             }
-        };
-    }
-
-
-    public String toString(){
-        return nomPiece+couleurPiece.toString();
-    }
-
-    @Override
-    public Couleur getCouleurPiece() {
-        return couleurPiece;
-    }
-
-    @Override
-    public String getNomPiece() {
-        return nomPiece;
+        });
     }
 
 }

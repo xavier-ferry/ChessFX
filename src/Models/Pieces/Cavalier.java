@@ -6,15 +6,11 @@ import Models.Piece;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Cavalier implements Piece {
-
-    private String nomPiece;
-    private Couleur couleurPiece;
+public class Cavalier extends Piece {
 
 
     public Cavalier(Couleur couleur){
-        this.nomPiece = "CAVALIER";
-        this.couleurPiece = couleur;
+        super("CAVALIER",couleur,null);
     }
 
     @Override
@@ -62,19 +58,6 @@ public class Cavalier implements Piece {
         return res;
     }
 
-    public String toString(){
-        return nomPiece+couleurPiece.toString();
-    }
-
-    @Override
-    public Couleur getCouleurPiece() {
-        return couleurPiece;
-    }
-
-    @Override
-    public String getNomPiece() {
-        return nomPiece;
-    }
 
 
 }

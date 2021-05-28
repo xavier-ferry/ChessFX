@@ -4,17 +4,28 @@ package Models;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface Piece {
+public abstract class Piece {
 
+    private Couleur couleurPiece;
+    private String nomPiece;
+    private ArrayList<String> directions;
+
+    public Piece(String nomPiece, Couleur couleurPiece, ArrayList<String> directions){
+        this.couleurPiece = couleurPiece;
+        this.nomPiece = nomPiece;
+        this.directions = directions;
+    }
 
     @Override
-    String toString();
+    public String toString(){return nomPiece+couleurPiece.toString();}
 
     //TODO : Avoir l'attribut couleur dans l'interface pour ne pas redéfinir cette fonction partout ?
-    Couleur getCouleurPiece();
-    String getNomPiece();
+    public Couleur getCouleurPiece(){return couleurPiece;}
+    public String getNomPiece(){return nomPiece;}
+    public ArrayList<String> getDirections(){return directions; }
 
-    default  ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase){
+
+    public ArrayList<String> getCasesAccessibles(Map<String,Piece> board, String nomCase){
         ArrayList<String> res = new ArrayList<>() ;
         for (String caseActuelle : getCasesDefendues(board,nomCase)){ //On va retirer les cases avec une piece de meme couleur
             if (board.get(caseActuelle) == null || board.get(caseActuelle).getCouleurPiece() != getCouleurPiece())
@@ -31,12 +42,12 @@ public interface Piece {
         return res;
     }*/
 
-    default ArrayList<String> getCasesDefendues(Map<String,Piece> board, String nomCase){
+    public ArrayList<String> getCasesDefendues(Map<String, Piece> board, String nomCase){
         return getCasesDefenduesGenerique(board,nomCase,getDirections());
     }
 
     // TODO : Meilleure solution ? getDirections() pourrait être privé dans les classes ?
-    default ArrayList<String> getDirections(){ return null;}
+    //public ArrayList<String> getDirections(){ return null;}
 
 
     private String caseBas(String nomCase){
@@ -134,7 +145,7 @@ public interface Piece {
             return null;
         }
     }
-    default String caseVoisin(String nomCase, String direction){
+    public String caseVoisin(String nomCase, String direction){
         switch (direction){
             case "HautGauche"   : return caseHautGauche(nomCase);
             case "Haut"         : return caseHaut(nomCase);
@@ -148,18 +159,20 @@ public interface Piece {
         }
     }
 
-    default boolean manger(Map<String,Piece>  board, String nomCase){
+    public boolean manger(Map<String,Piece>  board, String nomCase){
         if ( nomCase != null){
             Piece laPiece =  board.get(nomCase);
             return laPiece != null && laPiece.getCouleurPiece() != getCouleurPiece();
         }
         return false;
     }
-    default boolean bouger(Map<String,Piece>  board, String nomCase){
+    public boolean bouger(Map<String,Piece>  board, String nomCase){
         return ( nomCase != null && board.get(nomCase) == null);
     }
 
-    default ArrayList<String> getCasesDefenduesGenerique(Map<String, Piece> board, String nomCase, ArrayList<String> directionDeplacements){
+
+
+    public ArrayList<String> getCasesDefenduesGenerique(Map<String, Piece> board, String nomCase, ArrayList<String> directionDeplacements){
         ArrayList<String> res = new ArrayList<>();
         String nouvelleCase = nomCase;
         int i = 0;
